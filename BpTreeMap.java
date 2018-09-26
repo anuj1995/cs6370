@@ -168,10 +168,36 @@ public class BpTreeMap <K extends Comparable <K>, V>
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
         //  T O   B E   I M P L E M E N T E D
-            
-        return enSet;
+       Node first = firstLeaf; 
+       System.out.println("order: " + ORDER);
+       System.out.println("keyCount: " + keyCount);
+       for(int i = 0; i < (keyCount/ORDER) + 1; i++) { //loops through num nodes
+    	   for(int j = 0; j < ORDER-1; j++) {
+    		   if(i == 0) {
+    			   if(j == ORDER-2 && keyCount > 0) break;  //only do this when it's not the last leaf, prevents printing pointer list
+    		   }//if
+    		   else if(i > 0) {
+    			   if(j == ORDER -2 && (keyCount/ORDER) > i) break; //only do this when it's not the last leaf, prevents printing pointer list)
+    		   }//else if
+    		   
+    		   var v = (V) first.ref[j];
+    		   var k = (K) first.key[j];
+													 	  												
+    		   enSet.add(Map.entry(k, v));
+    		   
+    	   }//for
+    	   
+    	   if(first.ref[first.nKeys] != null) {
+    		   first = (Node) first.ref[first.nKeys];
+    	   } //if
+    	   
+       }//while
+       return enSet;
+        
     } // entrySet
-
+    
+    
+    
     /********************************************************************************
      * Given the key, look up the value in the B+Tree map.
      * @param key  the key used for look up
@@ -194,6 +220,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
         insert (key, value, root);
         return null;
     } // put
+    
 
     /********************************************************************************
      * Return the first (smallest) key in the B+Tree map.
@@ -222,8 +249,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public SortedMap <K,V> headMap (K toKey)
     {
         //  T O   B E   I M P L E M E N T E D
-
-        return null;
+    	return subMap(firstLeaf.key[0], toKey);
+        
     } // headMap
 
     /********************************************************************************
@@ -245,7 +272,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public SortedMap <K,V> subMap (K fromKey, K toKey)
     {
         //  T O   B E   I M P L E M E N T E D
-
+    	
+    	
+    	
         return null;
     } // subMap
 
@@ -338,8 +367,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
                 //  T O   B E   I M P L E M E N T E D
 
         } // if
-
         if (DEBUG) print (root, 0);
+        keyCount++; //added by Claire
         return rt;                                                           // return right node
     } // insert
 
@@ -430,6 +459,14 @@ public class BpTreeMap <K extends Comparable <K>, V>
         } // for
         out.println ("-------------------------------------------");
         out.println ("Average number of nodes accessed = " + bpt.count / (double) totalKeys);
+        
+        
+        //Student written testing below this line
+       // bpt.insert(7, 7);
+        //bpt.headMap(0);
+        var set = bpt.entrySet();
+        System.out.println(set.toString());
+        
     } // main
 
 } // BpTreeMap class
