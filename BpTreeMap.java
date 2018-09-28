@@ -243,9 +243,32 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> tailMap (K fromKey)
     {
+    	var nextNode = root;
+    	int dividerPos;
+    	int Pos;
+    	SortedMap result = new TreeMap<K, V>();
         //  T O   B E   I M P L E M E N T E D
-
-        return null;
+    	while(!nextNode.isLeaf)
+    	{
+    		dividerPos = nextNode.find(fromKey);
+    		nextNode = (BpTreeMap<K,V>.Node) nextNode.ref[dividerPos];
+    	}
+    	if(find(fromKey,nextNode)==null)
+    	{
+    		return null;
+    	}
+    	Pos = nextNode.find(fromKey);
+    	while(!(nextNode.ref[Pos] == null))
+    	{
+    		if(Pos == nextNode.nKeys)
+    		{
+    			nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[Pos];
+    			Pos = 0;
+    		}
+    		result.put(nextNode.key[Pos],nextNode.ref[Pos]);
+    		Pos++;
+    	}
+        return result;
     } // tailMap
 
     /********************************************************************************
