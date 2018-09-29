@@ -168,10 +168,36 @@ public class BpTreeMap <K extends Comparable <K>, V>
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
         //  T O   B E   I M P L E M E N T E D
-            
-        return enSet;
+       Node first = firstLeaf; 
+       System.out.println("order: " + ORDER);
+       System.out.println("keyCount: " + keyCount);
+       for(int i = 0; i < (keyCount/ORDER) + 1; i++) { //loops through num nodes
+    	   for(int j = 0; j < ORDER-1; j++) {
+    		   if(i == 0) {
+    			   if(j == ORDER-2 && keyCount > 0) break;  //only do this when it's not the last leaf, prevents printing pointer list
+    		   }//if
+    		   else if(i > 0) {
+    			   if(j == ORDER -2 && (keyCount/ORDER) > i) break; //only do this when it's not the last leaf, prevents printing pointer list)
+    		   }//else if
+    		   
+    		   var v = (V) first.ref[j];
+    		   var k = (K) first.key[j];
+														 	  												
+    		   enSet.add(Map.entry(k, v));
+    		   
+    	   }//for
+    	   
+    	   if(first.ref[first.nKeys] != null) {
+    		   first = (Node) first.ref[first.nKeys];
+    	   } //if
+    	   
+       }//while
+       return enSet;
+        
     } // entrySet
-
+    
+    
+    
     /********************************************************************************
      * Given the key, look up the value in the B+Tree map.
      * @param key  the key used for look up
@@ -194,6 +220,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
         insert (key, value, root);
         return null;
     } // put
+    
 
     /********************************************************************************
      * Return the first (smallest) key in the B+Tree map.
@@ -211,19 +238,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public K lastKey () 
     {
         //  T O   B E   I M P L E M E N T E D
-       //var n = root.toString();
-       //System.out.println(n);
-       //nextNode for iteration
-		var nextNode = root;
-		if (nextNode==null){
-			return null;
-		}
-		while(!nextNode.isLeaf){
-			nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[nextNode.nKeys];
-		}
-		return nextNode.key[nextNode.nKeys -1];
 
-
+        return null;
     } // lastKey
 
     /********************************************************************************
@@ -233,8 +249,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public SortedMap <K,V> headMap (K toKey)
     {
         //  T O   B E   I M P L E M E N T E D
-
-        return null;
+    	return subMap(firstLeaf.key[0], toKey);
+        
     } // headMap
 
     /********************************************************************************
@@ -243,32 +259,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> tailMap (K fromKey)
     {
-    	var nextNode = root;
-    	int dividerPos;
-    	int Pos;
-    	SortedMap result = new TreeMap<K, V>();
         //  T O   B E   I M P L E M E N T E D
-    	while(!nextNode.isLeaf)
-    	{
-    		dividerPos = nextNode.find(fromKey);
-    		nextNode = (BpTreeMap<K,V>.Node) nextNode.ref[dividerPos];
-    	}
-    	if(find(fromKey,nextNode)==null)
-    	{
-    		return null;
-    	}
-    	Pos = nextNode.find(fromKey);
-    	while(!(nextNode.ref[Pos] == null))
-    	{
-    		if(Pos == nextNode.nKeys)
-    		{
-    			nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[Pos];
-    			Pos = 0;
-    		}
-    		result.put(nextNode.key[Pos],nextNode.ref[Pos]);
-    		Pos++;
-    	}
-        return result;
+
+        return null;
     } // tailMap
 
     /********************************************************************************
@@ -279,7 +272,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public SortedMap <K,V> subMap (K fromKey, K toKey)
     {
         //  T O   B E   I M P L E M E N T E D
-
+    	
+    	
+    	
         return null;
     } // subMap
 
@@ -349,7 +344,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
 
         Node rt = null;                                                      // holder for right sibling
         
-        if (n.isLeaf) {                                                      // handle leaf node level
+        if (n.isLeaf) { //is a leafnode                                      // handle leaf node level
 
             if (n.nKeys < ORDER - 1) {                                       // current node is not full
                 wedge (key, ref, n, n.find (key), true);                     // wedge (key, ref) pair in at position i
@@ -369,11 +364,42 @@ public class BpTreeMap <K extends Comparable <K>, V>
             rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
             if (DEBUG) out.println ("insert: handle internal node level");
 
-                //  T O   B E   I M P L E M E N T E D
-
+        //  T O   B E   I M P L E M E N T E D
+        	//if internal node is full
+        	if(n.nKeys == ORDER-1){
+        		//split internal node
+        		
+        		if (n.nKeys < ORDER - 1) {                                       // current node is not full
+                	wedge (key, ref, n, n.find (key), true);                     // wedge (key, ref) pair in at position i
+            	} 
+            	else {   
+        			rt = split (key, ref, n, true);                              // split current node, return right sibling
+                	n.ref[n.nKeys] = rt; 										// link leaf n to leaf rt
+                	if (n == root && rt != null) {
+                    	root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
+                	} 
+                	else if (rt != null) {
+                    	hasSplit = true;                                         // indicate an unhandled split
+                	} // if
+                }//else
+                
+        	}//if
+        	
+        	i = n.find (key);                                            // find "<=" position
+            rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
+            if (DEBUG) out.println ("insert: handle internal node level");
+        		
+        	//else add key to internal node
+        
+       
+        
+        
         } // if
-
+        
+        
+        
         if (DEBUG) print (root, 0);
+        keyCount++; //added by Claire
         return rt;                                                           // return right node
     } // insert
 
@@ -446,8 +472,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 14;                    
-        var RANDOMLY  = false;
+        var totalKeys = 25;                    
+        var RANDOMLY  = false; //changed from false
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
    
@@ -464,6 +490,17 @@ public class BpTreeMap <K extends Comparable <K>, V>
         } // for
         out.println ("-------------------------------------------");
         out.println ("Average number of nodes accessed = " + bpt.count / (double) totalKeys);
+        
+        
+        //Student written testing below this line
+       	// bpt.insert(7, 7);
+        //bpt.headMap(0);
+        try {
+        	var set = bpt.entrySet();
+        } catch (Exception e ) { System.out.println("No value for key."); } 
+        
+        //System.out.println(set.toString());
+        
     } // main
 
 } // BpTreeMap class
