@@ -238,7 +238,16 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public K lastKey () 
     {
         //  T O   B E   I M P L E M E N T E D
-
+        var nextNode = root;
+		if (nextNode==null)
+    	{
+    		return null;	
+    	}
+    	while(!nextNode.isLeaf)
+    	{ 
+    		nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[nextNode.nKeys];
+    	}
+    	return nextNode.key[nextNode.nKeys -1];
         return null;
     } // lastKey
 
