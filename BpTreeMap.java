@@ -306,7 +306,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     public SortedMap <K,V> subMap (K fromKey, K toKey)
     {
         //  T O   B E   I M P L E M E N T E D
-    	 BpTreeMap<K,V> bm = new BpTreeMap<K,V>(classK, classV);
+    	 SortedMap bm = new TreeMap<K,V>();
 
          Node nextNode = root;
 
@@ -317,12 +317,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
          while (true){
 
                  for (int i = 0; i < nextNode.nKeys; i++){
-                         //System.out.println("i = " + i);
-                         //System.out.println("nextNodekeyinside = " + nextNode.key[i]);
-
+             
                          if (fromKey.compareTo(nextNode.key[i]) <= 0 && nextNode.key[i].compareTo(toKey) < 0){
-                                 bm.put(nextNode.key[i], get(nextNode.key[i]));
-                                 //System.out.println("@ " + nextNode.key[i] + " # " + get(nextNode.key[i]));
+                                 bm.put(nextNode.key[i], nextNode.ref[i]);
+                               //  System.out.println("@ " + nextNode.key[i] + " # " + get(nextNode.key[i]));
                          }
 
                  }
@@ -409,15 +407,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
 
             if (n.nKeys < ORDER - 1) {                                       // current node is not full
                 wedge (key, ref, n, n.find (key), true);                     // wedge (key, ref) pair in at position i
-            } else {    // current node is full
-            	//System.out.println("before split rt: " + rt);
-            	//System.out.println("before split n: " + n.toString());
-            	
+            } else {                                                         // current node is full
                 rt = split (key, ref, n, true);                              // split current node, return right sibling
-                
-                //System.out.println("after split rt: " + rt.toString());
-            	//System.out.println("after split n: " + n.toString());
-            	
                 n.ref[n.nKeys] = rt;                                         // link leaf n to leaf rt
                 if (n == root && rt != null) {
                     root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
@@ -427,24 +418,13 @@ public class BpTreeMap <K extends Comparable <K>, V>
             } // if
 
         } else {                                                             // handle internal node level
-        	
+
             var i = n.find (key);                                            // find "<=" position
-            System.out.println("var i: " + i);
             rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
             if (DEBUG) out.println ("insert: handle internal node level");
          
            
         //  T O   B E   I M P L E M E N T E D
-<<<<<<< HEAD
-        	
-       
-        
-        
-        
-        
-        
-        
-=======
         	//if internal node is full
 	        if(hasSplit)
 	        {
@@ -471,7 +451,6 @@ public class BpTreeMap <K extends Comparable <K>, V>
 	        	}
 	      	}
         }
->>>>>>> acf9650472fe759da1761072189b2d6e0c6ae29c
         if (DEBUG) print (root, 0);
         return rt;                                                           // return right node
     } // insert
@@ -543,13 +522,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * The main method used for testing.
      * @param  the command-line arguments (args[0] gives number of keys to insert)
      */
+    /*
     public static void main (String [] args)
     {
-<<<<<<< HEAD
-        var totalKeys = 25;  //was 15??                   
-=======
         var totalKeys = 125;                    
->>>>>>> acf9650472fe759da1761072189b2d6e0c6ae29c
         var RANDOMLY  = false; //changed from false
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
@@ -558,11 +534,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
             Random rng = new Random ();
             for (int i = 1; i <= totalKeys; i += 2) bpt.put (rng.nextInt (2 * totalKeys), i * i);
         } else {
-            //for (int i = 1; i <= totalKeys; i += 2) bpt.put (i, i * i); 
-        	for (int i = 1; i <= totalKeys; i += 2) {
-        		System.out.println("i: " + i);
-        		bpt.put (i, i * i);
-        	}
+            for (int i = 1; i <= totalKeys; i += 2) bpt.put (i, i * i);
         } // if
 
         bpt.print (bpt.root, 0);
@@ -574,14 +546,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
         
         
         //Student written testing below this line
-<<<<<<< HEAD
-        try {
-=======
        	// bpt.insert(7, 7);
         //bpt.headMap(0);
         try 
         {
->>>>>>> acf9650472fe759da1761072189b2d6e0c6ae29c
         	var set = bpt.entrySet();
         } catch (Exception e )
         { 
@@ -590,9 +558,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
         System.out.println("The largest key is : "+bpt.lastKey());
         try 
         {
-	        for (Integer treeKey : bpt.tailMap(3).keySet())
+	        for (Integer treeKey : bpt.tailMap(1).keySet())
 	        {  
-	        	System.out.println("Key: " + treeKey + " value: "+ bpt.tailMap(3).get(treeKey));	
+	        	System.out.println("Key: " + treeKey + " value: "+ bpt.tailMap(1).get(treeKey));	
 	        }
         }
         catch(Exception e)
@@ -600,8 +568,23 @@ public class BpTreeMap <K extends Comparable <K>, V>
         	System.out.println("key not found");
         }
         
-      
+        //System.out.println(set.toString());
+       
+        System.out.println();
+        System.out.println();
+        System.out.println("SubMap:");
+        
+        for (Integer subKey : bpt.subMap(1,123).keySet())
+        {  
+        	System.out.println("Key: " + subKey + " value: "+ bpt.subMap(1,123).get(subKey));	
+        }
+        System.out.println("..........................................................");
+        for (Integer subKey : bpt.headMap(123).keySet())
+        {  
+        	System.out.println("Key: " + subKey + " value: "+ bpt.headMap(123).get(subKey));	
+        }
+        
         
     } // main
-
+*/
 } // BpTreeMap class
