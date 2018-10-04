@@ -31,7 +31,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     /** The maximum fanout (number of children) for a B+Tree node.
      *  May wish to increase for better performance for Program 3.
      */
-    private static final int ORDER = 5;
+    private static final int ORDER = 5; 
 
     /** The maximum fanout (number of children) for a big B+Tree node.
      */
@@ -248,7 +248,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     		nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[nextNode.nKeys];
     	}
     	return nextNode.key[nextNode.nKeys -1];
-        return null;
+     
     } // lastKey
 
     /********************************************************************************
@@ -268,9 +268,34 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> tailMap (K fromKey)
     {
+    	var nextNode = root;
+    	int dividerPos;
+    	int Pos;
+    	SortedMap result = new TreeMap<K, V>();
         //  T O   B E   I M P L E M E N T E D
-
-        return null;
+    	// determining the bottom node
+    	while(!nextNode.isLeaf)
+    	{
+    		dividerPos = nextNode.find(fromKey);
+    		nextNode = (BpTreeMap<K,V>.Node) nextNode.ref[dividerPos];
+    	}
+    	// if key is present in the node
+    	if(find(fromKey,nextNode)==null)
+    	{
+    		return null;
+    	}
+    	Pos = nextNode.find(fromKey);
+    	while(!(nextNode.ref[Pos] == null))
+    	{
+    		if(Pos == nextNode.nKeys)
+    		{
+    			nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[Pos];
+    			Pos = 0;
+    		}
+    		result.put(nextNode.key[Pos],nextNode.ref[Pos]);
+    		Pos++;
+    	}
+        return result;
     } // tailMap
 
     /********************************************************************************
@@ -372,43 +397,36 @@ public class BpTreeMap <K extends Comparable <K>, V>
             var i = n.find (key);                                            // find "<=" position
             rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
             if (DEBUG) out.println ("insert: handle internal node level");
-
+         
+           
         //  T O   B E   I M P L E M E N T E D
         	//if internal node is full
-        	if(n.nKeys == ORDER-1){
-        		//split internal node
-        		
-        		if (n.nKeys < ORDER - 1) {                                       // current node is not full
-                	wedge (key, ref, n, n.find (key), true);                     // wedge (key, ref) pair in at position i
-            	} 
-            	else {   
-        			rt = split (key, ref, n, true);                              // split current node, return right sibling
-                	n.ref[n.nKeys] = rt; 										// link leaf n to leaf rt
-                	if (n == root && rt != null) {
-                    	root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
-                	} 
-                	else if (rt != null) {
-                    	hasSplit = true;                                         // indicate an unhandled split
-                	} // if
-                }//else
-                
-        	}//if
-        	
-        	i = n.find (key);                                            // find "<=" position
-            rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
-            if (DEBUG) out.println ("insert: handle internal node level");
-        		
-        	//else add key to internal node
-        
-       
-        
-        
-        } // if
-        
-        
-        
+	        if(hasSplit)
+	        {
+	        	if (n.nKeys < ORDER - 1)
+	        	{
+		        	// Wedge the left largest onto the above node 
+	        		wedge(((Node)n.ref[i]).key[MID-1],rt,n,n.find (key) ,false);	        		
+	        		//n.ref[n.find (key)] = rt; 
+	        		hasSplit = false;
+	        	}
+	        	else
+	        	{
+	        		//((Node)n.ref[i]).nKeys - 1
+	        		rt = split (((Node)n.ref[i]).key[MID-1], rt, n, false);                              // split current node, return right sibling
+	        		if (n == root && rt != null) {
+	                    root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
+	                    hasSplit = false;
+	                }
+	                else if (rt != null) {
+	                    hasSplit = true;                                         // indicate an unhandled split	
+	                } // if
+	                //wedge(((Node)n.ref[i]).key[((Node)n.ref[i]).nKeys - 1],rt,n,n.find (key) ,false);
+	        		n.nKeys = n.nKeys - 1;
+	        	}
+	      	}
+        }
         if (DEBUG) print (root, 0);
-        keyCount++; //added by Claire
         return rt;                                                           // return right node
     } // insert
 
@@ -481,7 +499,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 25;                    
+        var totalKeys = 125;                    
         var RANDOMLY  = false; //changed from false
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
@@ -504,9 +522,25 @@ public class BpTreeMap <K extends Comparable <K>, V>
         //Student written testing below this line
        	// bpt.insert(7, 7);
         //bpt.headMap(0);
-        try {
+        try 
+        {
         	var set = bpt.entrySet();
-        } catch (Exception e ) { System.out.println("No value for key."); } 
+        } catch (Exception e )
+        { 
+        	System.out.println("No value for key."); 
+        } 
+        System.out.println("The largest key is : "+bpt.lastKey());
+        try 
+        {
+	        for (Integer treeKey : bpt.tailMap(3).keySet())
+	        {  
+	        	System.out.println("Key: " + treeKey + " value: "+ bpt.tailMap(3).get(treeKey));	
+	        }
+        }
+        catch(Exception e)
+        {
+        	System.out.println("key not found");
+        }
         
         //System.out.println(set.toString());
         
