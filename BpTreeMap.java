@@ -31,7 +31,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     /** The maximum fanout (number of children) for a B+Tree node.
      *  May wish to increase for better performance for Program 3.
      */
-    private static final int ORDER = 5;
+    private static final int ORDER = 5; 
 
     /** The maximum fanout (number of children) for a big B+Tree node.
      */
@@ -248,7 +248,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     		nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[nextNode.nKeys];
     	}
     	return nextNode.key[nextNode.nKeys -1];
-        return null;
+     
     } // lastKey
 
     /********************************************************************************
@@ -268,9 +268,34 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public SortedMap <K,V> tailMap (K fromKey)
     {
+    	var nextNode = root;
+    	int dividerPos;
+    	int Pos;
+    	SortedMap result = new TreeMap<K, V>();
         //  T O   B E   I M P L E M E N T E D
-
-        return null;
+    	// determining the bottom node
+    	while(!nextNode.isLeaf)
+    	{
+    		dividerPos = nextNode.find(fromKey);
+    		nextNode = (BpTreeMap<K,V>.Node) nextNode.ref[dividerPos];
+    	}
+    	// if key is present in the node
+    	if(find(fromKey,nextNode)==null)
+    	{
+    		return null;
+    	}
+    	Pos = nextNode.find(fromKey);
+    	while(!(nextNode.ref[Pos] == null))
+    	{
+    		if(Pos == nextNode.nKeys)
+    		{
+    			nextNode = (BpTreeMap<K, V>.Node) nextNode.ref[Pos];
+    			Pos = 0;
+    		}
+    		result.put(nextNode.key[Pos],nextNode.ref[Pos]);
+    		Pos++;
+    	}
+        return result;
     } // tailMap
 
     /********************************************************************************
@@ -407,8 +432,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
             System.out.println("var i: " + i);
             rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
             if (DEBUG) out.println ("insert: handle internal node level");
-
+         
+           
         //  T O   B E   I M P L E M E N T E D
+<<<<<<< HEAD
         	
        
         
@@ -417,6 +444,34 @@ public class BpTreeMap <K extends Comparable <K>, V>
         
         
         
+=======
+        	//if internal node is full
+	        if(hasSplit)
+	        {
+	        	if (n.nKeys < ORDER - 1)
+	        	{
+		        	// Wedge the left largest onto the above node 
+	        		wedge(((Node)n.ref[i]).key[MID-1],rt,n,n.find (key) ,false);	        		
+	        		//n.ref[n.find (key)] = rt; 
+	        		hasSplit = false;
+	        	}
+	        	else
+	        	{
+	        		//((Node)n.ref[i]).nKeys - 1
+	        		rt = split (((Node)n.ref[i]).key[MID-1], rt, n, false);                              // split current node, return right sibling
+	        		if (n == root && rt != null) {
+	                    root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
+	                    hasSplit = false;
+	                }
+	                else if (rt != null) {
+	                    hasSplit = true;                                         // indicate an unhandled split	
+	                } // if
+	                //wedge(((Node)n.ref[i]).key[((Node)n.ref[i]).nKeys - 1],rt,n,n.find (key) ,false);
+	        		n.nKeys = n.nKeys - 1;
+	        	}
+	      	}
+        }
+>>>>>>> acf9650472fe759da1761072189b2d6e0c6ae29c
         if (DEBUG) print (root, 0);
         return rt;                                                           // return right node
     } // insert
@@ -490,7 +545,11 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public static void main (String [] args)
     {
+<<<<<<< HEAD
         var totalKeys = 25;  //was 15??                   
+=======
+        var totalKeys = 125;                    
+>>>>>>> acf9650472fe759da1761072189b2d6e0c6ae29c
         var RANDOMLY  = false; //changed from false
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
@@ -515,9 +574,31 @@ public class BpTreeMap <K extends Comparable <K>, V>
         
         
         //Student written testing below this line
+<<<<<<< HEAD
         try {
+=======
+       	// bpt.insert(7, 7);
+        //bpt.headMap(0);
+        try 
+        {
+>>>>>>> acf9650472fe759da1761072189b2d6e0c6ae29c
         	var set = bpt.entrySet();
-        } catch (Exception e ) { System.out.println("No value for key."); } 
+        } catch (Exception e )
+        { 
+        	System.out.println("No value for key."); 
+        } 
+        System.out.println("The largest key is : "+bpt.lastKey());
+        try 
+        {
+	        for (Integer treeKey : bpt.tailMap(3).keySet())
+	        {  
+	        	System.out.println("Key: " + treeKey + " value: "+ bpt.tailMap(3).get(treeKey));	
+	        }
+        }
+        catch(Exception e)
+        {
+        	System.out.println("key not found");
+        }
         
       
         

@@ -92,9 +92,22 @@ public class LinHashMap <K, V>
     public Set <Map.Entry <K, V>> entrySet ()
     {
         var enSet = new HashSet <Map.Entry <K, V>> ();
+        
+        //Iterate through hash table
+        for(int i = 0; i < hTable.size(); i++)
+        {
+        	Bucket temp = hTable.get(i);
+        	//Once in a bucket, get all v/k tuples to be entered into HashSet
+        	for(int j = 0; j < temp.nKeys; j++) 
+        	{
+        		K key = temp.key[j];
+        		V value = temp.value[j];
+        		
+        		Map.Entry<K, V> entry = new AbstractMap.SimpleEntry<K, V>(key, value);
+        		enSet.add(entry);
+        	}
+        }
 
-        //  T O   B E   I M P L E M E N T E D
-            
         return enSet;
     } // entrySet
 
@@ -105,9 +118,31 @@ public class LinHashMap <K, V>
      */
     public V get (Object key)
     {
-        var i = h (key);
-
-        //  T O   B E   I M P L E M E N T E D
+        var location = h (key);
+        int index = 0;
+        
+        //Hash location if necessary
+        if(location < split)
+        	location = h2(key);
+        
+        Bucket selectedBucket = hTable.get(location);
+        
+        //Check if bucket is empty
+        if(selectedBucket.equals(null))
+        	return null;
+        
+        while(selectedBucket.next != null) 
+        {
+            //Iterate through bucket looking for matching key
+            for(K aKey : selectedBucket.key) 
+            {
+            	if(aKey.equals(key)) 
+            		return selectedBucket.value[index];
+            	
+            	index++;		
+            }
+            selectedBucket = selectedBucket.next;
+        }
 
         return null;
     } // get
