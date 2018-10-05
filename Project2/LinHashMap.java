@@ -48,6 +48,14 @@ public class LinHashMap <K, V>
             value = (V []) Array.newInstance (classV, SLOTS);
             next  = n;
         } // constructor
+        
+        private void insert(K key, V value)
+        {
+        	this.key[this.nKeys] = key;
+        	this.value[this.nKeys] = value;
+        	this.nKeys++;
+        	keyCount++;
+        }
     } // Bucket inner class
 
     /** The list of buckets making up the hash table.
@@ -69,6 +77,10 @@ public class LinHashMap <K, V>
     /** The index of the next bucket to split.
      */
     private int split = 0;
+    
+    /** Counter for the total number of keys in the hashtable
+     */
+    private int keyCount = 0;
 
     /********************************************************************************
      * Construct a hash table that uses Linear Hashing.
@@ -83,6 +95,14 @@ public class LinHashMap <K, V>
         hTable = new ArrayList <> ();
         mod1   = 4;                        // initSize;
         mod2   = 2 * mod1;
+        
+        int initSize = 4;
+        
+        //Initialize starting hashmap
+        for(int i = 0; i < initSize; i++)
+        {
+        	hTable.add(new Bucket(null));
+        }
     } // constructor
 
     /********************************************************************************
@@ -96,12 +116,12 @@ public class LinHashMap <K, V>
         //Iterate through hash table
         for(int i = 0; i < hTable.size(); i++)
         {
-        	Bucket temp = hTable.get(i);
+        	Bucket selectedBucket = hTable.get(i);
         	//Once in a bucket, get all v/k tuples to be entered into HashSet
-        	for(int j = 0; j < temp.nKeys; j++) 
+        	for(int j = 0; j < selectedBucket.nKeys; j++) 
         	{
-        		K key = temp.key[j];
-        		V value = temp.value[j];
+        		K key = selectedBucket.key[j];
+        		V value = selectedBucket.value[j];
         		
         		Map.Entry<K, V> entry = new AbstractMap.SimpleEntry<K, V>(key, value);
         		enSet.add(entry);
@@ -133,7 +153,7 @@ public class LinHashMap <K, V>
         
         while(selectedBucket.next != null) 
         {
-            //Iterate through bucket looking for matching key
+            //Iterate through bucket looking for 
             for(K aKey : selectedBucket.key) 
             {
             	if(aKey.equals(key)) 
@@ -155,11 +175,80 @@ public class LinHashMap <K, V>
      */
     public V put (K key, V value)
     {
-        var i = h (key);
-        out.println ("LinearHashMap.put: key = " + key + ", h() = " + i + ", value = " + value);
-
-        //  T O   B E   I M P L E M E N T E D
-
+        var location = h (key);
+        out.println ("LinearHashMap.put: key = " + key + ", h() = " + location + ", value = " + value);
+        
+        //Return null if K or V are empty
+        if (key.equals(null) || value.equals(null))
+        	return null;
+        
+        //Hash location if necessary
+        if(location < split)
+        	location = h2(key);
+        
+        Bucket selectedBucket = hTable.get(location);
+        
+        //Compare size of bucket to slots to see if we can just insert directly
+        if(selectedBucket.nKeys < SLOTS)
+        {
+        	//Insert key and value into last indexes
+        	selectedBucket.insert(key, value);
+        	
+        	return value;
+        }
+        
+        ////Need to split buckets///////
+        
+        //Create new bucket
+        selectedBucket = new Bucket(null);
+        selectedBucket.insert(key, value);
+        hTable.add(selectedBucket);
+        	
+        double loadFactor = ((double)keyCount)/(SLOTS * mod1);
+        if(loadFactor >= 0.75) 
+        {
+        	//Create new bucket
+        	Bucket newBucket = new Bucket(null);
+        	
+        	//Create replacement bucket for split
+        	Bucket replacementBucket = new Bucket(null);
+        	
+        	//Get bucket that is to be split
+        	selectedBucket = hTable.get(split);
+        	
+        	for(int i = 0; i < selectedBucket.nKeys; i++) 
+        	{
+        		int hash = h2(selectedBucket.key[i]);
+        		if(hash == split)
+        		{
+        			if(replacementBucket.equals(null)) 
+        			{
+            			replacementBucket.next = new Bucket(null);
+                        replacementBucket = replacementBucket.next;
+        			}
+            		replacementBucket.insert(selectedBucket.key[i], selectedBucket.value[i]);
+        		}
+        		else
+        		{
+        			if(newBucket.equals(null))
+        			{
+        				newBucket.next = new Bucket(null);
+        				newBucket = newBucket.next;
+        			}
+            		newBucket.insert(selectedBucket.key[i], selectedBucket.value[i]);
+        		}
+        	}//end for loop
+        	
+            if(split ==  mod1 - 1 )
+            {
+                split=0;
+                mod1= mod1*2;
+                mod2= mod1*2;
+            }
+            else
+            	split++;
+        }
+        
         return null;
     } // put
 
@@ -180,7 +269,17 @@ public class LinHashMap <K, V>
         out.println ("Hash Table (Linear Hashing)");
         out.println ("-------------------------------------------");
 
-        //  T O   B E   I M P L E M E N T E D
+        for( int i = 0 ; i < hTable.size() ; i++ )
+        {
+           if( hTable.get(i).nKeys > 0 )
+                System.out.println("Bucket " + i + ":");
+                
+            //Print all buckets
+            for( int j = 0 ; j < hTable.get(i).nKeys ; j++ )
+            {
+                out.println( "   Key: " + hTable.get(i).key[j] +  " | Hash: " + h( hTable.get(i).key[j] )  + " | Value: " + hTable.get(i).value[j] );
+            }
+        }
 
         out.println ("-------------------------------------------");
     } // print
@@ -231,6 +330,7 @@ public class LinHashMap <K, V>
         } // for
         out.println ("-------------------------------------------");
         out.println ("Average number of buckets accessed = " + ht.count / (double) totalKeys);
+        out.println("Key count: " + ht.keyCount);
     } // main
 
 } // LinHashMap class
