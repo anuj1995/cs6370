@@ -139,7 +139,6 @@ public class LinHashMap <K, V>
     public V get (Object key)
     {
         var location = h (key);
-        int index = 0;
         
         //Hash location if necessary
         if(location < split)
@@ -148,18 +147,16 @@ public class LinHashMap <K, V>
         Bucket selectedBucket = hTable.get(location);
         
         //Check if bucket is empty
-        if(selectedBucket.equals(null))
+        if(selectedBucket.nKeys == 0)
         	return null;
         
-        while(selectedBucket.next != null) 
+        while(selectedBucket != null) 
         {
             //Iterate through bucket looking for matching key
-            for(K aKey : selectedBucket.key) 
+            for(int i = 0; i < selectedBucket.nKeys; i++)
             {
-            	if(aKey.equals(key)) 
-            		return selectedBucket.value[index];
-            	
-            	index++;		
+            	if(key.equals(selectedBucket.key[i])) 
+            		return selectedBucket.value[i];	
             }
             selectedBucket = selectedBucket.next;
         }
@@ -203,7 +200,8 @@ public class LinHashMap <K, V>
         selectedBucket = new Bucket(null);
         selectedBucket.insert(key, value);
         hTable.add(selectedBucket);
-        	
+        
+        //Calculate load factor
         double loadFactor = ((double)keyCount)/(SLOTS * mod1);
         if(loadFactor >= 0.75) 
         {
@@ -277,7 +275,7 @@ public class LinHashMap <K, V>
             //Print all buckets
             for( int j = 0 ; j < hTable.get(i).nKeys ; j++ )
             {
-                out.println( "   Key: " + hTable.get(i).key[j] +  " | Hash: " + h( hTable.get(i).key[j] )  + " | Value: " + hTable.get(i).value[j] );
+                out.println( "\tKey: " + hTable.get(i).key[j] +  " | Hash: " + h( hTable.get(i).key[j] )  + " | Value: " + hTable.get(i).value[j] );
             }
         }
 
