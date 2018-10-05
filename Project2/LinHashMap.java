@@ -153,7 +153,7 @@ public class LinHashMap <K, V>
         
         while(selectedBucket.next != null) 
         {
-            //Iterate through bucket looking for 
+            //Iterate through bucket looking for matching key
             for(K aKey : selectedBucket.key) 
             {
             	if(aKey.equals(key)) 
