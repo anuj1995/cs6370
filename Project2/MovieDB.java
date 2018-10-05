@@ -87,14 +87,14 @@ class MovieDB
         studio.insert (studio2);
         studio.print ();
 
-        movie.save ();
+       /* movie.save ();
         cinema.save ();
         movieStar.save ();
         starsIn.save ();
         movieExec.save ();
-        studio.save ();
-
-        movieStar.printIndex ();
+        studio.save ();*/
+       
+        /*movieStar.printIndex ();*/
 
         //--------------------- project: title year
 
@@ -170,6 +170,18 @@ class MovieDB
         try 
         {
         	t_join.print ();	
+        }
+        catch(Exception e)
+        {
+        	System.out.println("couldn't execute as tables are incompatible for equi-join operation");
+        }
+        
+      //--------------------- equi-join: movie i_JOIN studio ON studioName = name
+        out.println ();
+        var I_join = movie.i_join ("studioName", "name", studio);
+        try 
+        {
+        	I_join.print ();	
         }
         catch(Exception e)
         {

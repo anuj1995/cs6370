@@ -168,31 +168,33 @@ public class BpTreeMap <K extends Comparable <K>, V>
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
         //  T O   B E   I M P L E M E N T E D
-       Node first = firstLeaf; 
-       System.out.println("order: " + ORDER);
-       System.out.println("keyCount: " + keyCount);
-       for(int i = 0; i < (keyCount/ORDER) + 1; i++) { //loops through num nodes
-    	   for(int j = 0; j < ORDER-1; j++) {
-    		   if(i == 0) {
-    			   if(j == ORDER-2 && keyCount > 0) break;  //only do this when it's not the last leaf, prevents printing pointer list
-    		   }//if
-    		   else if(i > 0) {
-    			   if(j == ORDER -2 && (keyCount/ORDER) > i) break; //only do this when it's not the last leaf, prevents printing pointer list)
-    		   }//else if
-    		   
-    		   var v = (V) first.ref[j];
-    		   var k = (K) first.key[j];
-														 	  												
-    		   enSet.add(Map.entry(k, v));
-    		   
-    	   }//for
-    	   
-    	   if(first.ref[first.nKeys] != null) {
-    		   first = (Node) first.ref[first.nKeys];
-    	   } //if
-    	   
-       }//while
-       return enSet;
+        Node first = firstLeaf; 
+        int i = 0;
+        while(first != null && first.ref[i] != null)
+        {
+        	  
+        	  var k = (K) first.key[i];
+        	  if (k!= null) 
+        	  {
+        		  var v = (V) get(k);
+        		  enSet.add(Map.entry(k, v));
+        	  }
+        	  else
+        	  {
+        		  return null;
+        	  }
+        	  i++;
+        	  if(i == ORDER-1)
+        	  {
+        	  first = (Node) first.ref[first.nKeys];
+        	  i = 0; 		    
+        	  }//if	
+        	
+        	  
+        }//while
+        
+        return enSet;
+    
         
     } // entrySet
     
@@ -318,9 +320,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
 
                  for (int i = 0; i < nextNode.nKeys; i++){
              
-                         if (fromKey.compareTo(nextNode.key[i]) <= 0 && nextNode.key[i].compareTo(toKey) < 0){
-                                 bm.put(nextNode.key[i], nextNode.ref[i]);
-                               //  System.out.println("@ " + nextNode.key[i] + " # " + get(nextNode.key[i]));
+                         if (fromKey.compareTo(nextNode.key[i]) <= 0 && nextNode.key[i].compareTo(toKey) < 0)
+                         {                               bm.put(nextNode.key[i], nextNode.ref[i]);
+                            //  System.out.println("@ " + nextNode.key[i] + " # " + get(nextNode.key[i]));
                          }
 
                  }
@@ -522,8 +524,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * The main method used for testing.
      * @param  the command-line arguments (args[0] gives number of keys to insert)
      */
-    /*
-    public static void main (String [] args)
+    
+   /* public static void main (String [] args)
     {
         var totalKeys = 125;                    
         var RANDOMLY  = false; //changed from false
@@ -548,13 +550,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
         //Student written testing below this line
        	// bpt.insert(7, 7);
         //bpt.headMap(0);
-        try 
-        {
-        	var set = bpt.entrySet();
-        } catch (Exception e )
-        { 
-        	System.out.println("No value for key."); 
-        } 
+      
+        var it = bpt.entrySet();
+        System.out.println(it);
+  
         System.out.println("The largest key is : "+bpt.lastKey());
         try 
         {

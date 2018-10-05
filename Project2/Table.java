@@ -26,7 +26,7 @@ public class Table
 {
     /** Relative path for storage directory
      */
-    private static final String DIR = "C:\\Users\\anujp\\Desktop\\java" + File.separator;
+    private static final String DIR = "C:\\Users\\anujp\\Desktop\\test" + File.separator;
 
     /** Filename extension for database files
      */
@@ -69,7 +69,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.TREE_MAP;
+    private static final MapType mType = MapType.BPTREE_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -78,8 +78,8 @@ public class Table
     {
         switch (mType) {
         case TREE_MAP:    return new TreeMap <> ();
-//        case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
-//        case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
+        // case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
+        case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
         default:          return null;
         } // switch
     } // makeMap
@@ -339,7 +339,26 @@ public class Table
      */
     public Table i_join (String attributes1, String attributes2, Table table2)
     {
-        return null;
+    	var t_attrs = attributes1.split (" "); //String []
+        var u_attrs = attributes2.split (" ");
+    	var rows    = new ArrayList <Comparable []> ();
+    	
+    	for(Map.Entry<KeyType, Comparable[]> val1 : index.entrySet())
+    	{
+    		for(Map.Entry<KeyType, Comparable[]> val2 : table2.index.entrySet())
+    		{
+    			Comparable[] atr1 = extract(val1.getValue(),t_attrs);
+    			Comparable[] atr2 = table2.extract(val2.getValue(),u_attrs);
+    			if(Arrays.equals(atr1,atr2))
+    			{
+				Comparable [] both = Stream.concat(Arrays.stream(val1.getValue()), Arrays.stream(val2.getValue()))
+						.toArray(Comparable[]::new);
+						 rows.add(both);
+    			}
+    		}
+    	}
+    	return new Table (name + count++, /*ArrayUtil.concat (t_attrs, u_attrs)*/ArrayUtil.concat (attribute, table2.attribute),
+                ArrayUtil.concat (domain, table2.domain), key, rows);
     } // i_join
 
     /************************************************************************************
