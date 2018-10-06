@@ -154,7 +154,7 @@ public class LinHashMap <K, V>
             //Iterate through bucket looking for matching key
             for(int i = 0; i < selectedBucket.nKeys; i++)
             {
-            	if(key.equals(selectedBucket.key[i])) 
+            	if(selectedBucket.key[i] == key) 
             		return selectedBucket.value[i];	
             }
             selectedBucket = selectedBucket.next;
@@ -171,17 +171,19 @@ public class LinHashMap <K, V>
      */
     public V put (K key, V value)
     {
+    	//Hash with low res
         var location = h (key);
-        out.println ("LinearHashMap.put: key = " + key + ", h() = " + location + ", value = " + value);
+        out.println ("LinearHashMap.put: key = " + key + " , hashcode = " + key.hashCode() + ", h() = " + location + ", value = " + value);
         
         //Return null if K or V are empty
         if (key.equals(null) || value.equals(null))
         	return null;
         
-        //Hash location if necessary
+        //Hash with high res if necessary
         if(location < split)
         	location = h2(key);
         
+        //Get bucket at hash location
         Bucket selectedBucket = hTable.get(location);
         
         //Compare size of bucket to slots to see if we can just insert directly
@@ -190,21 +192,21 @@ public class LinHashMap <K, V>
         	//Insert key and value into last indexes
         	selectedBucket.insert(key, value);
         	
-        	return value;
+        	return null;
         }
         
         ////Need to split buckets///////
         
-        //Create new bucket
-        selectedBucket = new Bucket(null);
-        selectedBucket.insert(key, value);
-        hTable.add(selectedBucket);
+        //Create new overflow
+        Bucket overflow = new Bucket(null);
+        overflow.insert(key, value);
+        hTable.add(overflow);
+        
         
         //Calculate load factor
         double loadFactor = ((double)keyCount)/(SLOTS * mod1);
         if(loadFactor >= 0.75) 
         {
-
         	//Create new bucket
         	Bucket newBucket = new Bucket(null);
         	
@@ -217,6 +219,7 @@ public class LinHashMap <K, V>
         	for(int i = 0; i < selectedBucket.nKeys; i++) 
         	{
         		int hash = h2(selectedBucket.key[i]);
+        		
         		if(hash == split)
         		{
         			if(replacementBucket.equals(null)) 
@@ -224,6 +227,7 @@ public class LinHashMap <K, V>
             			replacementBucket.next = new Bucket(null);
                         replacementBucket = replacementBucket.next;
         			}
+        			keyCount--;
             		replacementBucket.insert(selectedBucket.key[i], selectedBucket.value[i]);
         		}
         		else
@@ -233,14 +237,15 @@ public class LinHashMap <K, V>
         				newBucket.next = new Bucket(null);
         				newBucket = newBucket.next;
         			}
+        			keyCount--;
             		newBucket.insert(selectedBucket.key[i], selectedBucket.value[i]);
         		}
         	}//end for loop
-        	
-            if(split ==  mod1 - 1 )
+
+            if(split == (mod1 - 1))
             {
                 split=0;
-                mod1= mod1*2;
+                mod1*= 2;
                 mod2= mod1*2;
             }
             else
@@ -275,7 +280,7 @@ public class LinHashMap <K, V>
             //Print all buckets
             for( int j = 0 ; j < hTable.get(i).nKeys ; j++ )
             {
-                out.println( "\tKey: " + hTable.get(i).key[j] +  " | Hash: " + h( hTable.get(i).key[j] )  + " | Value: " + hTable.get(i).value[j] );
+                out.println( "\tKey: " + hTable.get(i).key[j] +  "\t\t | \t\t Hash: " + h( hTable.get(i).key[j] )  + "\t\t | \t\tValue: " + hTable.get(i).value[j] );
             }
         }
 
