@@ -39,7 +39,6 @@ public class LinHashMap <K, V>
         K []   key;
         V []   value;
         Bucket next;
-
         @SuppressWarnings("unchecked")
         Bucket (Bucket n)
         {
@@ -88,20 +87,17 @@ public class LinHashMap <K, V>
      * @param classV    the class for keys (V)
      * @param initSize  the initial number of home buckets (a power of 2, e.g., 4)
      */
-    public LinHashMap (Class <K> _classK, Class <V> _classV)    // , int initSize)
+    public LinHashMap (Class <K> _classK, Class <V> _classV)
     {
         classK = _classK;
         classV = _classV;
         hTable = new ArrayList <> ();
-        mod1   = 4;                        // initSize;
+        mod1   = 4;
         mod2   = 2 * mod1;
         
-        
-        //Initialize starting hashmap
+        //initialize the buckets in hTable to null buckets
         for(int i = 0; i < mod1; i++)
-        {
-        	hTable.add(new Bucket(null));
-        }
+            hTable.add(new Bucket(null));
     } // constructor
 
     /********************************************************************************
@@ -126,9 +122,8 @@ public class LinHashMap <K, V>
         		enSet.add(entry);
         	}
         }
-
         return enSet;
-    } // entrySet
+} // entrySet
 
     /********************************************************************************
      * Given the key, look up the value in the hash table.
@@ -161,7 +156,7 @@ public class LinHashMap <K, V>
         }
 
         return null;
-    } // get
+} // get
 
     /********************************************************************************
      * Put the key-value pair in the hash table.
@@ -172,86 +167,97 @@ public class LinHashMap <K, V>
     public V put (K key, V value)
     {
     	//Hash with low res
-        var location = h (key);
-        out.println ("LinearHashMap.put: key = " + key + " , hashcode = " + key.hashCode() + ", h() = " + location + ", value = " + value);
-        
-        //Return null if K or V are empty
+        int i = h (key);
+        out.println ("LinearHashMap.put: key = " + key + " , hashcode = " + key.hashCode() + ", h() = " + i + ", value = " + value);
+
+      //Return null if K or V are empty
         if (key.equals(null) || value.equals(null))
         	return null;
         
         //Hash with high res if necessary
-        if(location < split)
-        	location = h2(key);
+        if(i < split)
+        	i = h2(key);
         
         //Get bucket at hash location
-        Bucket selectedBucket = hTable.get(location);
+        Bucket selectedBucket = hTable.get(i);
         
         //Compare size of bucket to slots to see if we can just insert directly
         if(selectedBucket.nKeys < SLOTS)
-        {
-        	//Insert key and value into last indexes
         	selectedBucket.insert(key, value);
-        	
-        	return null;
-        }
-        
-        ////Need to split buckets///////
-        
-        //Create new overflow
-        Bucket overflow = new Bucket(null);
-        overflow.insert(key, value);
-        hTable.add(overflow);
-        
-        
-        //Calculate load factor
-        double loadFactor = ((double)keyCount)/(SLOTS * mod1);
-        if(loadFactor >= 0.75) 
+        else
         {
-        	//Create new bucket
-        	Bucket newBucket = new Bucket(null);
-        	
-        	//Create replacement bucket for split
-        	Bucket replacementBucket = new Bucket(null);
-        	
-        	//Get bucket that is to be split
-        	selectedBucket = hTable.get(split);
-        	
-        	for(int i = 0; i < selectedBucket.nKeys; i++) 
-        	{
-        		int hash = h2(selectedBucket.key[i]);
-        		
-        		if(hash == split)
-        		{
-        			if(replacementBucket.equals(null)) 
-        			{
-            			replacementBucket.next = new Bucket(null);
-                        replacementBucket = replacementBucket.next;
-        			}
-        			keyCount--;
-            		replacementBucket.insert(selectedBucket.key[i], selectedBucket.value[i]);
-        		}
-        		else
-        		{
-        			if(newBucket.equals(null))
-        			{
-        				newBucket.next = new Bucket(null);
-        				newBucket = newBucket.next;
-        			}
-        			keyCount--;
-            		newBucket.insert(selectedBucket.key[i], selectedBucket.value[i]);
-        		}
-        	}//end for loop
-
-            if(split == (mod1 - 1))
+        	//Create new overflow bucket
+            hTable.add(new Bucket(null));
+            
+          //Find last bucket
+            while(selectedBucket.next != null)
             {
-                split=0;
-                mod1*= 2;
-                mod2= mod1*2;
+                selectedBucket = selectedBucket.next;
             }
+            
+          //Insert into new bucket
+            if(selectedBucket.nKeys < SLOTS)
+                selectedBucket.insert(key, value);
             else
-            	split++;
-        }
-        
+            {
+            	//Create yet another bucket
+                selectedBucket.next = new Bucket(null);
+                selectedBucket = selectedBucket.next;
+                selectedBucket.insert(key, value);
+            }
+            
+
+            //Calculate load factor
+            double loadFactor = ((double)keyCount)/(SLOTS * mod1);
+            if(loadFactor >= 0.75) 
+            {
+            	//Replace the split bucket
+                Bucket repBucket = new Bucket(null);
+                
+                //Create the new bucket
+                Bucket newBucket = new Bucket(null);
+                
+                //Select the bucket that will be split
+                selectedBucket = hTable.get(split);                
+                
+                for(int k =0; k <selectedBucket.nKeys; k++)
+                {
+                    int hash = h2(selectedBucket.key[k]);
+                    if(hash == split)
+                    {
+                        if(repBucket.next ==null)
+                        {
+                            repBucket.next = new Bucket(null);
+                            repBucket = repBucket.next;
+                        }
+                        //Insert into replacement bucket
+                        repBucket.insert(selectedBucket.key[k], selectedBucket.value[k]);
+                    }
+                    else
+                    {
+                        if(newBucket.next == null)
+                        {
+                        	newBucket.next = new Bucket(null);
+                        	newBucket = newBucket.next;
+                        }
+                        //Insert into new bucket
+                        newBucket.key[newBucket.nKeys] = selectedBucket.key[k];
+                        newBucket.value[newBucket.nKeys] = selectedBucket.value[k];
+                    }
+                }
+                
+                //Reset split iterator
+                if(split == (mod1 -1) )
+                {
+                    mod1 *= 2;
+                    mod2 = mod1*2;
+                    split = 0;
+                }
+                //Increment split
+                else
+                    split++;
+            }   
+        }//else
         return null;
     } // put
 
@@ -285,8 +291,9 @@ public class LinHashMap <K, V>
         }
 
         out.println ("-------------------------------------------");
-    } // print
-
+} // print
+    
+    
     /********************************************************************************
      * Hash the key using the low resolution hash function.
      * @param key  the key to hash
@@ -333,7 +340,6 @@ public class LinHashMap <K, V>
         } // for
         out.println ("-------------------------------------------");
         out.println ("Average number of buckets accessed = " + ht.count / (double) totalKeys);
-        out.println("Key count: " + ht.keyCount);
     } // main
 
 } // LinHashMap class
