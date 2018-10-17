@@ -69,7 +69,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.BPTREE_MAP;
+    private static final MapType mType = MapType.LINHASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -78,7 +78,7 @@ public class Table
     {
         switch (mType) {
         case TREE_MAP:    return new TreeMap <> ();
-        // case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
+        case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
         case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
         default:          return null;
         } // switch
@@ -200,21 +200,19 @@ public class Table
      * @return  a table with the tuple satisfying the key predicate
      */
     public Table select (KeyType keyVal)
-    {
-        out.println ("RA> " + name + ".select (" + keyVal + ")");
+	{
+		out.println("RA> " + name + ".select (" + keyVal + ")");
 
-        List <Comparable []> rows = new ArrayList <> ();
-        //get the indexed tuple from the index Map
-        Comparable[] tup = index.get(keyVal);
-        // Check if it returns null
-        if (tup != null)
-	       	{
-	       		rows.add(tup);
-	       	}
+		List<Comparable[]> rows = new ArrayList<>();
+		// get the indexed tuple from the index Map
+		Comparable[] tup = index.get(keyVal);
+		// Check if it returns null
+		if (tup != null) {
+			rows.add(tup);
+		}
 
-
-        return new Table (name + count++, attribute, domain, key, rows);
-    } // select
+		return new Table(name + count++, attribute, domain, key, rows);
+	} // select
 
     /************************************************************************************
      * Union this table and table2.  Check that the two tables are compatible.
@@ -245,7 +243,7 @@ public class Table
         	
         }	
 
-        return new Table (name + count++, attribute, domain, key, rows);
+        return new Table (name + count++, attribute, domain, attribute, rows);
     } // union
 
     /************************************************************************************
