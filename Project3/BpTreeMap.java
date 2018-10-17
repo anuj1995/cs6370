@@ -8,12 +8,11 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
-
 import static java.lang.Math.ceil;
 import static java.lang.System.out;
 
 /************************************************************************************
- * The BpTreeMap class provides B+Tree maps.  B+Trees are used as multi-level index
+ * The BpTreeMap class provides B+Tree maps. B+Trees are used as multi-level index
  * structures that provide efficient access for both point queries and range queries.
  * All keys will be at the leaf level with leaf nodes linked by references.
  * Internal nodes will contain divider keys such that each divider key corresponds to
@@ -31,7 +30,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     /** The maximum fanout (number of children) for a B+Tree node.
      *  May wish to increase for better performance for Program 3.
      */
-    private static final int ORDER = 5; 
+    private static final int ORDER = 20; 
 
     /** The maximum fanout (number of children) for a big B+Tree node.
      */
@@ -184,10 +183,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
         		  return null;
         	  }
         	  i++;
-        	  if(i == ORDER-1)
+        	  if(i == first.nKeys)
         	  {
-        	  first = (Node) first.ref[first.nKeys];
-        	  i = 0; 		    
+	        	  first = (Node) first.ref[first.nKeys];
+	        	  i = 0; 		    
         	  }//if	
         	
         	  
@@ -398,64 +397,60 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     @SuppressWarnings("unchecked")
     private Node insert (K key, V ref, Node n)
-    {
-        out.println ("=============================================================");
-        out.println ("insert: key = " + key);
-        out.println ("=============================================================");
+	{
+		out.println("=============================================================");
+		out.println("insert: key = " + key);
+		out.println("=============================================================");
 
-        Node rt = null;                                                      // holder for right sibling
-        
-        if (n.isLeaf) { //is a leafnode                                      // handle leaf node level
+		Node rt = null; // holder for right sibling
 
-            if (n.nKeys < ORDER - 1) {                                       // current node is not full
-                wedge (key, ref, n, n.find (key), true);                     // wedge (key, ref) pair in at position i
-            } else {                                                         // current node is full
-                rt = split (key, ref, n, true);                              // split current node, return right sibling
-                n.ref[n.nKeys] = rt;                                         // link leaf n to leaf rt
-                if (n == root && rt != null) {
-                    root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
-                } else if (rt != null) {
-                    hasSplit = true;                                         // indicate an unhandled split
-                } // if
-            } // if
+		if (n.isLeaf) { // is a leafnode // handle leaf node level
 
-        } else {                                                             // handle internal node level
+			if (n.nKeys < ORDER - 1) { // current node is not full
+				wedge(key, ref, n, n.find(key), true); // wedge (key, ref) pair in at position i
+			} else { // current node is full
+				rt = split(key, ref, n, true); // split current node, return right sibling
+				n.ref[n.nKeys] = rt; // link leaf n to leaf rt
+				if (n == root && rt != null) {
+					root = makeRoot(n, n.key[n.nKeys - 1], rt); // make a new root
+				} else if (rt != null) {
+					hasSplit = true; // indicate an unhandled split
+				} // if
+			} // if
 
-            var i = n.find (key);                                            // find "<=" position
-            rt = insert (key, ref, (Node) n.ref[i]);                         // recursive call to insert
-            if (DEBUG) out.println ("insert: handle internal node level");
-         
-           
-        //  T O   B E   I M P L E M E N T E D
-        	//if internal node is full
-	        if(hasSplit)
-	        {
-	        	if (n.nKeys < ORDER - 1)
-	        	{
-		        	// Wedge the left largest onto the above node 
-	        		wedge(((Node)n.ref[i]).key[MID-1],rt,n,n.find (key) ,false);	        		
-	        		//n.ref[n.find (key)] = rt; 
-	        		hasSplit = false;
-	        	}
-	        	else
-	        	{
-	        		//((Node)n.ref[i]).nKeys - 1
-	        		rt = split (((Node)n.ref[i]).key[MID-1], rt, n, false);                              // split current node, return right sibling
-	        		if (n == root && rt != null) {
-	                    root = makeRoot (n, n.key[n.nKeys-1], rt);               // make a new root
-	                    hasSplit = false;
-	                }
-	                else if (rt != null) {
-	                    hasSplit = true;                                         // indicate an unhandled split	
-	                } // if
-	                //wedge(((Node)n.ref[i]).key[((Node)n.ref[i]).nKeys - 1],rt,n,n.find (key) ,false);
-	        		n.nKeys = n.nKeys - 1;
-	        	}
-	      	}
-        }
-        if (DEBUG) print (root, 0);
-        return rt;                                                           // return right node
-    } // insert
+		} else { // handle internal node level
+
+			var i = n.find(key); // find "<=" position
+			rt = insert(key, ref, (Node) n.ref[i]); // recursive call to insert
+			if (DEBUG)
+				out.println("insert: handle internal node level");
+
+			// T O B E I M P L E M E N T E D
+			// if internal node is full
+			if (hasSplit) {
+				if (n.nKeys < ORDER - 1) {
+					// Wedge the left largest onto the above node
+					wedge(((Node) n.ref[i]).key[MID - 1], rt, n, n.find(key), false);
+					// n.ref[n.find (key)] = rt;
+					hasSplit = false;
+				} else {
+					// ((Node)n.ref[i]).nKeys - 1
+					rt = split(((Node) n.ref[i]).key[MID - 1], rt, n, false); // split current node, return right
+																				// sibling
+					if (n == root && rt != null) {
+						root = makeRoot(n, n.key[n.nKeys - 1], rt); // make a new root
+						hasSplit = false;
+					} else if (rt != null) {
+						hasSplit = true; // indicate an unhandled split
+					} // if
+					n.nKeys = MID - 1;
+				}
+			}
+		}
+		if (DEBUG)
+			print(root, 0);
+		return rt; // return right node
+	} // insert
 
     /********************************************************************************
      * Make a new root, linking to left and right child node, separated by a divider key.
@@ -525,9 +520,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * @param  the command-line arguments (args[0] gives number of keys to insert)
      */
     
-   /* public static void main (String [] args)
+    public static void main (String [] args)
     {
-        var totalKeys = 125;                    
+        var totalKeys = 100;                    
         var RANDOMLY  = false; //changed from false
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
@@ -548,12 +543,11 @@ public class BpTreeMap <K extends Comparable <K>, V>
         
         
         //Student written testing below this line
-       	// bpt.insert(7, 7);
         //bpt.headMap(0);
       
         var it = bpt.entrySet();
         System.out.println(it);
-  
+        System.out.println(it.size());
         System.out.println("The largest key is : "+bpt.lastKey());
         try 
         {
@@ -585,5 +579,5 @@ public class BpTreeMap <K extends Comparable <K>, V>
         
         
     } // main
-*/
+
 } // BpTreeMap class
