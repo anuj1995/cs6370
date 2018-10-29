@@ -1,4 +1,3 @@
-
 /************************************************************************************
  * @file LinHashMap.java
  *
@@ -94,7 +93,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * Construct a hash table that uses Linear Hashing.
-	 * 
+	 *
 	 * @param classK   the class for keys (K)
 	 * @param classV   the class for keys (V)
 	 * @param initSize the initial number of home buckets (a power of 2, e.g., 4)
@@ -110,7 +109,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * Return a set containing all the entries as pairs of keys and values.
-	 * 
+	 *
 	 * @return the set view of the map
 	 */
 	public Set<Map.Entry<K, V>> entrySet() {
@@ -140,7 +139,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * Given the key, look up the value in the hash table.
-	 * 
+	 *
 	 * @param key the key used for look up
 	 * @return the value associated with the key
 	 */
@@ -153,18 +152,20 @@ public class LinHashMap <K, V>
 		int index;
 		V value = null;
 		// case for home + overflow
-		if (nextBucket != null && nextBucket.next != null) {
+		if (nextBucket != null && nextBucket.next != null ) {
 			while (nextBucket != null) {
+                                if(nextBucket.key != null){
 				if (Arrays.asList(nextBucket.key).contains(key)) {
 					index = Arrays.asList(nextBucket.key).indexOf(key);
 					value = nextBucket.value[index];
 				}
 				nextBucket = nextBucket.next;
+                        }
 
 			}
 
 		} // case for home buckets
-		else if (nextBucket != null) {
+		else if (nextBucket != null && nextBucket.key != null) {
 			if (Arrays.asList(nextBucket.key).contains(key)) {
 				index = Arrays.asList(nextBucket.key).indexOf(key);
 				value = nextBucket.value[index];
@@ -176,7 +177,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * Put the key-value pair in the hash table.
-	 * 
+	 *
 	 * @param key   the key to insert
 	 * @param value the value to insert
 	 * @return null (not the previous value)
@@ -190,7 +191,7 @@ public class LinHashMap <K, V>
 		if (i < split) {
 			i = h2(key);
 		}
-		out.println("LinearHashMap.put: key = " + key + ", h() = " + i + ", value = " + value);
+//		out.println("LinearHashMap.put: key = " + key + ", h() = " + i + ", value = " + value);
 
 		// initial creation of buckets based on size
 		if (hTable.size() == 0) {
@@ -261,7 +262,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * Return the size (SLOTS * number of home buckets) of the hash table.
-	 * 
+	 *
 	 * @return the size of the hash table
 	 */
 	public int size() {
@@ -299,12 +300,12 @@ public class LinHashMap <K, V>
 			}
 		}
 
-		out.println("-------------------------------------------");
+//		out.println("-------------------------------------------");
 	} // print
 
 	/********************************************************************************
 	 * Hash the key using the low resolution hash function.
-	 * 
+	 *
 	 * @param key the key to hash
 	 * @return the location of the bucket chain containing the key-value pair
 	 */
@@ -314,7 +315,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * Hash the key using the high resolution hash function.
-	 * 
+	 *
 	 * @param key the key to hash
 	 * @return the location of the bucket chain containing the key-value pair
 	 */
@@ -389,7 +390,7 @@ public class LinHashMap <K, V>
 
 	/********************************************************************************
 	 * The main method used for testing.
-	 * 
+	 *
 	 * @param the command-line arguments (args [0] gives number of keys to insert)
 	 */
 	public static void main(String[] args) {
@@ -414,10 +415,10 @@ public class LinHashMap <K, V>
 		System.out.println(ht.get(99));
 		System.out.println(ht.entrySet());
 		for (int i = 0; i <= totalKeys; i++) {
-			out.println("key = " + i + " value = " + ht.get(i));
+//			out.println("key = " + i + " value = " + ht.get(i));
 		} // for
-		out.println("-------------------------------------------");
-		out.println("Average number of buckets accessed = " + ht.count / (double) totalKeys);
+//		out.println("-------------------------------------------");
+//		out.println("Average number of buckets accessed = " + ht.count / (double) totalKeys);
 	} // main
 
 } // LinHashMap class
