@@ -19,12 +19,12 @@ public class JoinQuery {
 	 * @param attribute2 is table2's attribute to join on.
 	 * @return time that it takes for i_join to run in milliseconds.
 	 */
-	public double i_joinExecutionTime(Table table1, Table table2, String attribute1, String attribute2) {
-		long beginTime = System.currentTimeMillis();
+	public static long i_joinExecutionTime(Table table1, Table table2, String attribute1, String attribute2) {
+		long beginTime = System.nanoTime();
 		table1.i_join(attribute1, attribute2, table2);
-		long stopTime = System.currentTimeMillis();
+		long stopTime = System.nanoTime();
 		
-		return (stopTime-beginTime); //time in milliseconds
+		return (stopTime-beginTime) / 1000000; //time in milliseconds
 		
 	}//execuationTime
 	
@@ -37,12 +37,12 @@ public class JoinQuery {
 	 * @param attribute2 is table2's attribute to join on.
 	 * @return time that it takes for join to run in milliseconds.
 	 */
-	public double equiJoinExecutionTime(Table table1, Table table2, String attribute1, String attribute2) {
-		long beginTime = System.currentTimeMillis();
+	public static long equiJoinExecutionTime(Table table1, Table table2, String attribute1, String attribute2) {
+		long beginTime = System.nanoTime();
 		table1.join(attribute1, attribute2, table2);
-		long stopTime = System.currentTimeMillis();
+		long stopTime = System.nanoTime();
 		
-		return (stopTime-beginTime); //time in milliseconds
+		return (stopTime-beginTime)/1000000; //time in milliseconds
 		
 	}//execuationTime
 	
@@ -52,12 +52,12 @@ public class JoinQuery {
 	 * @param table2 is the second table to join.
 	 * @return time that it takes for join to run in milliseconds.
 	 */
-	public double naturalJoinExecutionTime(Table table1, Table table2) {
-		long beginTime = System.currentTimeMillis();
+	public static long naturalJoinExecutionTime(Table table1, Table table2) {
+		long beginTime = System.nanoTime();
 		table1.join(table2);
-		long stopTime = System.currentTimeMillis();
+		long stopTime = System.nanoTime();
 		
-		return (stopTime-beginTime); //time in milliseconds
+		return (stopTime-beginTime)/1000000; //time in milliseconds
 		
 	}//execuationTime
 	
@@ -148,24 +148,36 @@ public class JoinQuery {
       teaching.print();
       transcript.print();
       
-      //equi-join
-      //var j_t00 = teaching.join("crsCode", "crsCode", transcript);
-      //j_t00.print();
       
       
-	  
       
-	  long beginTime = System.currentTimeMillis();
-	  var ij_t00 = teaching.i_join("crsCode", "crsCode", transcript);
-	  long stopTime = System.currentTimeMillis();
-	  ij_t00.print();
-	  
-	  System.out.println(stopTime-beginTime);
-	  
-	  
+	  /*
+      //index join
+      long beginTime = System.nanoTime();
+      Table ij_00 = teaching.i_join("crsCode", "crsCode", transcript);
+      long stopTime = System.nanoTime();	
+      ij_00.print();
+	  System.out.println("index join: " + (stopTime-beginTime) / 1000000 + " ms");
+      */
+	  /*
+	  //equijoin
+	  beginTime = System.nanoTime();
+	  Table nj_00 = teaching.join("crsCode", "crsCode", transcript);
+	  stopTime = System.nanoTime();
+      System.out.println("equijoin: " + (stopTime-beginTime)/1000000 + " ms");
+	  */
+	  /*
       //natural join
-      //var nj_t00 = teaching.join(transcript);
-      //nj_t00.print();
+      beginTime = System.nanoTime();
+      teaching.join(transcript);
+      stopTime = System.nanoTime();
+	  System.out.println("natural join: " + (stopTime-beginTime)/1000000 + " ms");
+	  */
+	  
+	  
+	  
+      
+      
 	  
 	  
 	  
