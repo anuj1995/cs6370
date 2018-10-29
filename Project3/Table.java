@@ -65,7 +65,7 @@ public class Table
 
     /** The supported map types.
      */
-    private enum MapType { NO_MAP, TREE_MAP, LINHASH_MAP, BPTREE_MAP }
+    private enum MapType { NO_MAP, TREE_MAP, LINHASH_MAP, BPTREE_MAP ,Hash_Map}
 
     /** The map type to be used for indices.  Change as needed.
      */
@@ -77,6 +77,7 @@ public class Table
     private static Map <KeyType, Comparable []> makeMap ()
     {
         switch (mType) {
+        case Hash_Map:    return new HashMap<>(); 
         case TREE_MAP:    return new TreeMap <> ();
         case LINHASH_MAP: return new LinHashMap <> (KeyType.class, Comparable [].class);
         case BPTREE_MAP:  return new BpTreeMap <> (KeyType.class, Comparable [].class);
@@ -285,7 +286,8 @@ public class Table
      * @param table2      the rhs table in the join operation
      * @return Table a table with tuples satisfying the equality predicate
      */
-    public Table join (String attributes1, String attributes2, Table table2)
+    
+	public Table join (String attributes1, String attributes2, Table table2)
     {
         out.println ("RA> " + name + ".join (" + attributes1 + ", " + attributes2 + ", "
                                                + table2.name + ")");
@@ -293,25 +295,41 @@ public class Table
         var t_attrs = attributes1.split (" "); //String []
         var u_attrs = attributes2.split (" ");
         var rows    = new ArrayList <Comparable []> ();
-
-
+        var t1Columnpos = match(t_attrs);
+        var t2Columnpos = table2.match(u_attrs); 
+        //Doamin check for the join attributes
+       /* if(extractDom(t1Indexpos, this.domain) != (Class[])extractDom(t2Indexpos, table2.domain))
+        {
+        	System.out.println("The domains of the join attributes dont match");
+        	return null;
+        }*/
         //has all tables combined - works
-	    for(Comparable [] val1: this.tuples)
-	    {
-	    	for(Comparable [] val2 : table2.tuples)
+	    for(int i = 0; i< tuples.size(); i++)
+	    {	
+	    	var table1Tuple = tuples.get(i);
+	    	for(int j = 0; j< table2.tuples.size(); j++)
 	    	{
-	    		for(Comparable c1 : val1)
-	    		{
-	    			for(Comparable c2 : val2)
-	    			{
-	    				if(c1.equals(c2))
-	    				{
-	    					Comparable [] both = Stream.concat(Arrays.stream(val1), Arrays.stream(val2))
-	    							.toArray(Comparable[]::new);
-	    							 rows.add(both);
-	    				}//if
-	    				break;	
-	    			}//for
+				var table2Tuple = table2.tuples.get(j);
+	    		for(int k=0; k<table1Tuple.length; k++)
+	    		{	
+	    			int a[] = {k};
+	    			if((arraycontains(t1Columnpos,k)))
+	    			{	 
+		    			for(int l=0; l < table2Tuple.length; l++)
+		    			{
+		    				int b[] = {l};
+		    				if((arraycontains(t2Columnpos,l)))
+		    				{
+			    				if((Comparable)table1Tuple[k]==((Comparable)table2Tuple[l]) && extractDom(a, this.domain)[0].getName() == extractDom(b, table2.domain)[0].getName())
+			    				{
+			    					Comparable [] both = Stream.concat(Arrays.stream(table1Tuple), Arrays.stream(table2Tuple))
+			    							.toArray(Comparable[]::new);
+			    							 rows.add(both);
+			    				}//if
+			    				break;
+		    				}
+		    			}//for
+	    			}//if
 	    		}//for
 	        }//for
 	    }//for
@@ -340,16 +358,21 @@ public class Table
     	var t_attrs = attributes1.split (" "); //String []
         var u_attrs = attributes2.split (" ");
     	var rows    = new ArrayList <Comparable []> ();
-    	
+        var t1ColumnDom = extractDom(match(t_attrs),this.domain);
+        var t2ColumnDom = extractDom(table2.match(u_attrs),table2.domain);
+        
+        
     	for(Map.Entry<KeyType, Comparable[]> val1 : index.entrySet())
     	{
     		for(Map.Entry<KeyType, Comparable[]> val2 : table2.index.entrySet())
     		{
-    			Comparable[] atr1 = extract(val1.getValue(),t_attrs);
-    			Comparable[] atr2 = table2.extract(val2.getValue(),u_attrs);
-    			if(Arrays.equals(atr1,atr2))
+    			Comparable[] atrVal1 = extract(val1.getValue(),t_attrs);
+    			Comparable[] atrVal2 = table2.extract(val2.getValue(),u_attrs);
+    			int a[] = {Arrays.asList((Comparable[])val1.getValue()).indexOf(((Comparable)atrVal1[0]).toString())};
+    			int b[] = {Arrays.asList((Comparable[])val2.getValue()).indexOf(((Comparable)atrVal2[0]).toString())};
+    			if(Arrays.equals(atrVal1,atrVal2) && extractDom(a, this.domain)[0].getName() == extractDom(b, table2.domain)[0].getName())
     			{
-				Comparable [] both = Stream.concat(Arrays.stream(val1.getValue()), Arrays.stream(val2.getValue()))
+    				Comparable [] both = Stream.concat(Arrays.stream(val1.getValue()), Arrays.stream(val2.getValue()))
 						.toArray(Comparable[]::new);
 						 rows.add(both);
     			}
@@ -370,6 +393,11 @@ public class Table
      */
     public Table h_join (String attributes1, String attributes2, Table table2)
     {
+    	var t_attrs = attributes1.split (" "); //String []
+        var u_attrs = attributes2.split (" ");
+        
+        
+        
         return null;
     } // h_join
 
@@ -386,7 +414,7 @@ public class Table
     public Table join (Table table2)
     {
         out.println ("RA> " + name + ".join (" + table2.name + ")");
-
+        
         var rows = new ArrayList <Comparable []> ();
 
         //  T O   B E   I M P L E M E N T E D
@@ -403,39 +431,8 @@ public class Table
         String[] s1 = attribute;
         String[] s2 = table2.attribute;
         String[] common =  getCommonAttributes(table2);
-        for(Comparable [] val1: this.tuples)
-        {
-        	for(Comparable [] val2 : table2.tuples)
-        	{
-        		for(Comparable c1 : val1)
-        		{
-        			for(Comparable c2 : val2)
-        			{
-        				if(c1.equals(c2))
-        				{
-        					Arrays.sort(s1);
-        					Arrays.sort(s2);
-    						if(Arrays.equals(s1,s2))  //if all attributes were shared attributes
-    						{	
-    							both = Arrays.stream(val1).distinct().toArray(Comparable[]::new);
-    							rows.add(both);	
-    						}//if											
-
-    						else
-    						{
-								both = Stream.concat(Arrays.stream(val1), Arrays.stream(val2)).distinct().toArray(Comparable[]::new);
-								if(extract (val1, common) == extract (val2, common))
-    							{
-									rows.add(both);
-    							}
-    						}//else
-           				}//if
-        				break;
-        			}//for
-        		}//for
-            }//for
-         }//for
-        
+        var t1Columnpos = match(common);
+        var t2Columnpos = table2.match(common);
         //case for Cartesian product in natural join
         if(common.length == 0)
         {
@@ -447,7 +444,39 @@ public class Table
             	}
             }
         }
-        if(rows.size() <= 0 && common.length == 0)
+        else
+        {	
+	        for(int i = 0; i< this.tuples.size(); i++)
+	        {
+	        	var table1Tuple = tuples.get(i);
+	        	for(int j = 0; j< table2.tuples.size(); j++)
+	        	{
+	        		var table2Tuple = table2.tuples.get(j);
+	        		for(int k=0; k < table1Tuple.length; k++)
+	        		{
+	        			int a[] = {k};
+	        			if((arraycontains(t1Columnpos,k)))
+	        			{
+		        			for(int l=0; l < table1Tuple.length; l++)
+		        			{
+		        				int b[] = {l};
+		        				if((arraycontains(t2Columnpos,l)))
+		        				{
+		        					if(table1Tuple.equals(table2Tuple) && (Comparable)table1Tuple[k]==((Comparable)table2Tuple[l]) && extractDom(a, this.domain)[0].getName() == extractDom(b, table2.domain)[0].getName())
+	    							{	
+	    								both = Stream.concat(Arrays.stream(table1Tuple), Arrays.stream(table2Tuple)).distinct().toArray(Comparable[]::new);
+	    								rows.add(both);
+	    							}
+		        					break;
+		        				}//if
+		        				
+		        			}//for
+		        		}//for
+	        		}//if
+	            }//for
+	         }//for
+        }
+        if(rows.size() <= 0)
 	    {
         	return null;
 	    }
@@ -686,9 +715,24 @@ public class Table
      */
     private boolean typeCheck (Comparable [] t)
     {
+    	if(domain.length != t.length ) {
+    		System.out.println("not caompatible tuple");
+    		return false;
+    	}
+    	else
+    	{
+    		for(int i = 0; i < t.length;i++){
+    			if(t[i].getClass().getName().toString().contains(domain[i].toString())) {
+    				System.out.println("domains dont match");
+    				return false;
+    			}				
+    		}
+    	return true;
+    	}
+    		
+   	
         //  T O   B E   I M P L E M E N T E D
 
-        return true;
     } // typeCheck
 
     /************************************************************************************
@@ -730,4 +774,22 @@ public class Table
         return obj;
     } // extractDom
 
+	/************************************************************************************
+	 * finding that a array contains an element or not
+	 *
+	 * @param int array
+	 * @param item to find
+	 * @return  a boolean value true or false
+	 */
+    
+    public static boolean arraycontains(int[] arr, int item) {
+        for (int n : arr) {
+           if (item == n) {
+              return true;
+           }
+        }
+        return false;
+     }
 } // Table class
+
+
