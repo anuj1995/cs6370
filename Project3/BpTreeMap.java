@@ -25,7 +25,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
 {
     /** The debug flag
      */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     /** The maximum fanout (number of children) for a B+Tree node.
      *  May wish to increase for better performance for Program 3.
@@ -162,7 +162,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * Return a set containing all the entries as pairs of keys and values.
      * @return  the set view of the map
      */
-    public Set <Map.Entry <K, V>> entrySet ()
+    @SuppressWarnings("unchecked")
+	public Set <Map.Entry <K, V>> entrySet ()
     {
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
@@ -171,25 +172,25 @@ public class BpTreeMap <K extends Comparable <K>, V>
         int i = 0;
         while(first != null && first.ref[i] != null)
         {
-        	  
-        	  var k = (K) first.key[i];
-        	  if (k!= null) 
-        	  {
-        		  var v = (V) get(k);
-        		  enSet.add(Map.entry(k, v));
-        	  }
-        	  else
-        	  {
-        		  return null;
-        	  }
-        	  i++;
-        	  if(i == first.nKeys)
-        	  {
-	        	  first = (Node) first.ref[first.nKeys];
-	        	  i = 0; 		    
-        	  }//if	
-        	
-        	  
+
+        	var k = (K) first.key[i];
+        	if (k!= null) 
+        	{
+        		var v = (V) get(k);
+        		enSet.add(Map.entry(k, v));
+        	}
+        	else
+        	{
+        		return null;
+        	}
+        	i++;
+        	if(i == first.nKeys)
+        	{
+        		first = (Node) first.ref[first.nKeys];
+        		i = 0; 		    
+        	}//if	
+
+
         }//while
         
         return enSet;
@@ -398,9 +399,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
     @SuppressWarnings("unchecked")
     private Node insert (K key, V ref, Node n)
 	{
-		out.println("=============================================================");
+		/*out.println("=============================================================");
 		out.println("insert: key = " + key);
-		out.println("=============================================================");
+		out.println("=============================================================");*/
 
 		Node rt = null; // holder for right sibling
 
