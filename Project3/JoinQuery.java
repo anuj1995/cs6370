@@ -114,7 +114,7 @@ public class JoinQuery {
                                           { "crsCode semester", "Teaching", "crsCode semester" }});
 
       var tables = new String [] { "Student", "Professor", "Course", "Teaching", "Transcript" };
-      var tups   = new int [] { 8, 4, 2, 4, 5 };
+      var tups   = new int [] { 10000, 10000, 10000, 10000, 10000 };
   
       var resultTest = test.generate (tups);
       
@@ -122,11 +122,11 @@ public class JoinQuery {
       Table professor = new Table("Professor", "id name deptId", "Integer String String", "id");
       Table course = new Table("Course", "crsCode deptId crsName descr", "String String String String", "crsCode");
       Table teaching = new Table("Teaching","crsCode semester profId", "String String Integer", "crsCode semester");
-      Table transcript = new Table("Transcript", "studId crsCode semester grade", "Integer String String String", "id");
+      Table transcript = new Table("Transcript", "studId crsCode semester grade", "Integer String String String", "studId crsCode semester");
             
       
       
-      for (int i = 0; i < resultTest.length; i++) {
+/*      for (int i = 0; i < resultTest.length; i++) {
           
           for (int j = 0; j < resultTest [i].length; j++) {
         	  //inserting tuples into tables
@@ -140,39 +140,50 @@ public class JoinQuery {
           } // for
       } // for
       
+*/      for(int i = 0; i < resultTest[0].length; i++){
+	        var tt = new Comparable [] {resultTest[0][i][0], resultTest[0][i][1], resultTest[0][i][2], resultTest[0][i][3]};
+	        student.insert(tt);
+		}
+		for(int i = 0; i < resultTest[4].length; i++){
+			var tt = new Comparable [] {resultTest[4][i][0], resultTest[4][i][1], resultTest[4][i][2], resultTest[4][i][3]};
+			transcript.insert(tt);
+		}
+		
+      
 	  
-	  //printing tables
+ /*     //printing tables
       professor.print();
       student.print();
       course.print();
       teaching.print();
       transcript.print();
+      */
       
       
       
-      
-	  /*
+	  
       //index join
-      long beginTime = System.nanoTime();
-      Table ij_00 = teaching.i_join("crsCode", "crsCode", transcript);
-      long stopTime = System.nanoTime();	
+      double beginTime = System.nanoTime();
+      Table ij_00 = student.i_join("id", "studId", transcript);
+      double stopTime = System.nanoTime();	
       ij_00.print();
 	  System.out.println("index join: " + (stopTime-beginTime) / 1000000 + " ms");
-      */
-	  /*
+      
+	  
 	  //equijoin
-	  beginTime = System.nanoTime();
-	  Table nj_00 = teaching.join("crsCode", "crsCode", transcript);
+      beginTime = System.nanoTime();
+	  Table ej_00 = student.join("id", "studId", transcript);
 	  stopTime = System.nanoTime();
+	  //ej_00.print();
       System.out.println("equijoin: " + (stopTime-beginTime)/1000000 + " ms");
-	  */
-	  /*
-      //natural join
+	 
+	  
+/*      //natural join
       beginTime = System.nanoTime();
       teaching.join(transcript);
       stopTime = System.nanoTime();
-	  System.out.println("natural join: " + (stopTime-beginTime)/1000000 + " ms");
-	  */
+	  System.out.println("natural join: " + (stopTime-beginTime)/1000000 + " ms");*/
+	  
 	  
 	  
 	  
