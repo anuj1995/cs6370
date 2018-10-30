@@ -46,10 +46,10 @@ public class SelectRangeQuery {
         var tables = new String [] { "Student", "Professor", "Course", "Teaching", "Transcript" };
         var tups   = new int [] { 10000, 1000, 2000, 50000, 5000 };
         
-	    //Create relations (student, professor, course, teaching, transcript)
-	    Table studentRelation = new Table("Student", "id name address status", "Integer String String String", "id");
-	    Table professorRelation = new Table ("Professor", "id name deptId",	"Integer String String", "id");
-	    Table courseRelation = new Table ("Course", "crsCode deptId crsName descr", "String String String String", "crsCode");
+	//Create relations (student, professor, course, teaching, transcript)
+	Table studentRelation = new Table("Student", "id name address status", "Integer String String String", "id");
+	Table professorRelation = new Table ("Professor", "id name deptId", "Integer String String", "id");
+	Table courseRelation = new Table ("Course", "crsCode deptId crsName descr", "String String String String", "crsCode");
         Table teachingRelation = new Table ("Teaching", "crsCode semester profId","String String Integer", "crsCode semester");
         Table transcriptRelation = new Table ("Transcript", "studId crsCode semester grade","Integer String String String", "studId crsCode semester");
     
@@ -79,7 +79,7 @@ public class SelectRangeQuery {
         
         //Select Range Query with 1000 tuples
         for( int i = 0; i < 100 ; i++){
-        	studentIndex = randomGenerator.nextInt(1000) + 1;
+		studentIndex = randomGenerator.nextInt(1000) + 1;
             KeyType k = new KeyType(resultTest[0][studentIndex][0]);
             professorRelation.select(k);
         }
