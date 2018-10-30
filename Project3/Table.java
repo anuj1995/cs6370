@@ -69,7 +69,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.LINHASH_MAP;
+    private static final MapType mType = MapType.Hash_Map;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -358,26 +358,42 @@ public class Table
     	var t_attrs = attributes1.split (" "); //String []
         var u_attrs = attributes2.split (" ");
     	var rows    = new ArrayList <Comparable []> ();
-        var t1ColumnDom = extractDom(match(t_attrs),this.domain);
-        var t2ColumnDom = extractDom(table2.match(u_attrs),table2.domain);
-        
-        
-    	for(Map.Entry<KeyType, Comparable[]> val1 : index.entrySet())
+/*      var t1ColumnDom = extractDom(match(t_attrs),this.domain);
+        var t2ColumnDom = extractDom(table2.match(u_attrs),table2.domain);*/
+    	/*var table1entry = index.entrySet();
+    	var table2entry =  table2.index.entrySet();
+    	
+    	for(Map.Entry<KeyType, Comparable[]> val1 : table1entry)
     	{
-    		for(Map.Entry<KeyType, Comparable[]> val2 : table2.index.entrySet())
+    		for(Map.Entry<KeyType, Comparable[]> val2 : table2entry)
     		{
     			Comparable[] atrVal1 = extract(val1.getValue(),t_attrs);
     			Comparable[] atrVal2 = table2.extract(val2.getValue(),u_attrs);
-    			int a[] = {Arrays.asList((Comparable[])val1.getValue()).indexOf(((Comparable)atrVal1[0]).toString())};
-    			int b[] = {Arrays.asList((Comparable[])val2.getValue()).indexOf(((Comparable)atrVal2[0]).toString())};
-    			if(Arrays.equals(atrVal1,atrVal2) && extractDom(a, this.domain)[0].getName() == extractDom(b, table2.domain)[0].getName())
+    			int a[] = {Arrays.asList((Comparable[])val1.getValue()).indexOf(((Comparable)atrVal1[0]))};
+    			int b[] = {Arrays.asList((Comparable[])val2.getValue()).indexOf(((Comparable)atrVal2[0]))};
+    			
+    			if(Arrays.equals(atrVal1,atrVal2))
     			{
     				Comparable [] both = Stream.concat(Arrays.stream(val1.getValue()), Arrays.stream(val2.getValue()))
 						.toArray(Comparable[]::new);
+    				Comparable [] both = ArrayUtil.concat(val1.getValue(), val2.getValue());
 						 rows.add(both);
     			}
     		}
+    	}*/
+    	
+    	for(var tup : table2.tuples)
+    	{	
+    		var searchKey = (new KeyType (table2.extract(tup,u_attrs)));
+    		var x = index.get(searchKey);
+	    	if(x != null)
+	    	{	
+	    		Comparable [] both = ArrayUtil.concat(tup, x);
+				rows.add(both);
+	    	}	
+    
     	}
+    	
     	return new Table (name + count++, /*ArrayUtil.concat (t_attrs, u_attrs)*/ArrayUtil.concat (attribute, table2.attribute),
                 ArrayUtil.concat (domain, table2.domain), key, rows);
     } // i_join
@@ -536,7 +552,7 @@ public class Table
      */
     public boolean insert (Comparable [] tup)
     {
-        out.println ("DML> insert into " + name + " values ( " + Arrays.toString (tup) + " )");
+        //out.println ("DML> insert into " + name + " values ( " + Arrays.toString (tup) + " )");
 
         if (typeCheck (tup)) {
             tuples.add (tup);
@@ -667,7 +683,7 @@ public class Table
     /************************************************************************************
      * Match the column and attribute names to determine the domains.
      *
-     * @param column  the array of column names
+     * @param column the array of column names
      * @return  an array of column index positions
      */
     private int [] match (String [] column)
@@ -722,7 +738,7 @@ public class Table
     	else
     	{
     		for(int i = 0; i < t.length;i++){
-    			if(t[i].getClass().getName().toString().contains(domain[i].toString())) {
+    			if(domain[i] != t[i].getClass()) {
     				System.out.println("domains dont match");
     				return false;
     			}				
