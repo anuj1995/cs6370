@@ -112,9 +112,9 @@ public class JoinQuery {
                          new String [][] {{ "studId", "Student", "id"},
                                           { "crsCode", "Course", "crsCode" },
                                           { "crsCode semester", "Teaching", "crsCode semester" }});
-
+      int tupleNum = 10000;
       var tables = new String [] { "Student", "Professor", "Course", "Teaching", "Transcript" };
-      var tups   = new int [] { 10000, 10000, 10000, 10000, 10000 };
+      var tups   = new int [] { tupleNum, tupleNum, tupleNum, tupleNum, tupleNum};
   
       var resultTest = test.generate (tups);
       
@@ -163,20 +163,38 @@ public class JoinQuery {
       
 	  
       //index join
-      double beginTime = System.nanoTime();
-      Table ij_00 = student.i_join("id", "studId", transcript);
-      double stopTime = System.nanoTime();	
-      ij_00.print();
-	  System.out.println("index join: " + (stopTime-beginTime) / 1000000 + " ms");
-      
+	  int i = 0;
+	  int avg = 0;
+	  while(i < 11) {
+		  double beginTime = System.nanoTime();
+		  Table ij_00 = student.i_join("id", "studId", transcript);
+		  double stopTime = System.nanoTime();	
+		  //ij_00.print();
+		  System.out.println("index join: " + (stopTime-beginTime) / 1000000 + " ms");
+		  if(i != 0) avg += (stopTime-beginTime) / 1000000;
+		  i++;
+	  }//while 
+	  avg /=10;
+	  System.out.println("index join avg: " + avg);
+	  
+	  System.out.println();
+	  System.out.println("------------------");
+	  
 	  
 	  //equijoin
-      beginTime = System.nanoTime();
-	  Table ej_00 = student.join("id", "studId", transcript);
-	  stopTime = System.nanoTime();
-	  //ej_00.print();
-      System.out.println("equijoin: " + (stopTime-beginTime)/1000000 + " ms");
-	 
+	  int j = 0;
+	  avg = 0;
+	  while(j < 11) {
+		  double beginTime = System.nanoTime();
+		  Table ej_00 = student.join("id", "studId", transcript);
+		  double stopTime = System.nanoTime();
+		  //ej_00.print();
+		  System.out.println("equijoin: " + (stopTime-beginTime)/1000000 + " ms");
+		  if(j != 0) avg += (stopTime-beginTime) / 1000000;
+		  j++;
+	  }//while
+	  avg /= 10;
+	  System.out.println("equijoin avg: " + avg);
 	  
 /*      //natural join
       beginTime = System.nanoTime();
