@@ -13,6 +13,14 @@ import java.io.IOException;
 public class MySQLQueryReader {
 
   public static void main (String [] args){
+    //connect to the database - change to Anuj's credentials
+    /*
+    MysqlDataSource dataSource = new MysqlDataSource();
+    dataSource.setUser("scott");
+    dataSource.setPassword("tiger");
+    dataSource.setServerName("myDBHost.example.org");
+*/
+
     var test = new TupleGeneratorImpl ();
 
       test.addRelSchema ("Student",
@@ -69,47 +77,50 @@ public class MySQLQueryReader {
 			transcript.insert(tt);
 		}
 
- /*     //printing tables
-      professor.print();
-      student.print();
-      course.print();
-      teaching.print();
-      transcript.print();
-      */
+    //execute query
+    Connection conn = dataSource.getConnection();
+    Statement stmt = conn.createStatement();
 
-    //index join
-	  int i = 0;
-	  double avg = 0;
-	  while(i < 11) {
-		  double beginTime = System.nanoTime();
-		  Table ij_00 = student.i_join("id", "studId", transcript);
-		  double stopTime = System.nanoTime();
-		  //ij_00.print();
-		  System.out.println("index join: " + (stopTime-beginTime) / 1000000 + " ms");
-		  if(i != 0) avg += (stopTime-beginTime) / 1000000;
-		  i++;
-	  }//while
-	  avg /=10;
-	  System.out.println("index join avg: " + avg);
+    //timer for mysql query
+    //List the name of the student with id equal to v1 (id).
+    double beginTime = System.nanoTime();
+    ResultSet rs = stmt.executeQuery("SELECT name FROM student WHERE id=v1");
+    double stopTime = System.nanoTime();
 
-	  System.out.println();
-	  System.out.println("------------------");
+    //timer for mysql query
+    //List the names of students with id in the range of v2 (id) to v3 (inclusive).
+    beginTime = System.nanoTime();
+    ResultSet rs = stmt.executeQuery("SELECT name FROM student WHERE id>=v1 AND id<=v3");
+    stopTime = System.nanoTime();
 
-	  //equijoin
-	  int j = 0;
-	  avg = 0;
-	  while(j < 11) {
-		  double beginTime = System.nanoTime();
-		  Table ej_00 = student.join("id", "studId", transcript);
-		  double stopTime = System.nanoTime();
-		  //ej_00.print();
-		  System.out.println("equijoin: " + (stopTime-beginTime)/1000000 + " ms");
-		  if(j != 0) avg += (stopTime-beginTime) / 1000000;
-		  j++;
-	  }//while
-	  avg /= 10;
-	  System.out.println("equijoin avg: " + avg);
+    //timer for mysql query
+    //List the names of students who have taken course v4 (crsCode).
+    beginTime = System.nanoTime();
+    ResultSet rs = stmt.executeQuery("SELECT s.name FROM student as s, transcript as t WHERE t.stuId=s.id AND t.crsCode=v4");
+    stopTime = System.nanoTime();
 
+    //timer for mysql query
+    //List the names of students who have taken a course taught by professor v5 (name).
+    beginTime = System.nanoTime();
+    ResultSet rs = stmt.executeQuery("SELECT s.name FROM student as s, transcript as tr, teaching as te, professor as p WHERE s.id=tr.studId AND tr.crsCode=te.crsCode AND te.profId=p.id");
+    stopTime = System.nanoTime();
+
+    //timer for mysql query
+    //List the names of students who have taken a course from department v6 (deptId), but not v7.
+    beginTime = System.nanoTime();
+    ResultSet rs = stmt.executeQuery("SELECT s.name FROM student as s, transcript as t, course as c WHERE s.id=t.studId AND tr.crsCODE=c.crsCode AND c.deptId=v6 AND c.deptId<>v7");
+    stopTime = System.nanoTime();
+
+    //timer for mysql query
+    //List the names of students who have taken all courses offered by department v8 (deptId).
+    beginTime = System.nanoTime();
+    ResultSet rs = stmt.executeQuery("SELECT s.name FROM student as s, transcript as t, course as c WHERE s.id=t.studId AND t.crsCode=c.crsCode AND ALL IN ( SELECT crsCode FROM course WHERE deptId=v8)");
+    stopTime = System.nanoTime();
+
+    //close connection to the database
+    rs.close();
+    stmt.close();
+    conn.close();
 
   }//main
 
