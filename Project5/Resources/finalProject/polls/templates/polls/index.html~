@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+  <title> Running Polls </title>
+</head>
+<body>
+<div class="menubar"> 
+  <li><a href="http://172.19.50.157/pj04/"> Home </a></li>
+  <li><a href="http://172.19.50.157/pj04/"> Polls </a></li>
+  <li><a href="http://172.19.50.157/pj04/admin/"> Admin </a></li>
+  <li><a href="http://172.19.50.157/pj04/static/schema.html"> Schema </a></li>
+</div>
+<hr>
+<h1>What's your favorite part of running?</h1>
+<p>There are many different great parts of running. What would you vote as your favorite?</p>
+
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

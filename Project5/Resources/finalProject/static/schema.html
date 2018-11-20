@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+  <link rel="stylesheet" type="text/css" href="polls/style.css">
+  <title> Running Polls </title>
+</head>
+<body>
+<div class="menubar"> 
+  <a href="http://172.19.50.157/pj04/"> Home </a>
+  <a href="http://172.19.50.157/pj04/static/polls.html"> Polls </a>
+  <a href="http://172.19.50.157/pj04/admin/"> Admin </a>
+  <a href="http://172.19.50.157/pj04/static/schema.html"> Schema </a></div>
+<hr>
+<h1>Schema Info </h1>
+<br><br>
+
+<h2> auth_group </h2>
+<br>
+<pre>
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(80) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> auth_group_permissions </h2>
+<br>
+<pre>
++---------------+---------+------+-----+---------+----------------+
+| Field         | Type    | Null | Key | Default | Extra          |
++---------------+---------+------+-----+---------+----------------+
+| id            | int(11) | NO   | PRI | NULL    | auto_increment |
+| group_id      | int(11) | NO   | MUL | NULL    |                |
+| permission_id | int(11) | NO   | MUL | NULL    |                |
++---------------+---------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> auth_permission </h2>
+<br>
+<pre>
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| id              | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name            | varchar(255) | NO   |     | NULL    |                |
+| content_type_id | int(11)      | NO   | MUL | NULL    |                |
+| codename        | varchar(100) | NO   |     | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> auth_user </h2>
+<br>
+<pre>
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int(11)      | NO   | PRI | NULL    | auto_increment |
+| password     | varchar(128) | NO   |     | NULL    |                |
+| last_login   | datetime(6)  | YES  |     | NULL    |                |
+| is_superuser | tinyint(1)   | NO   |     | NULL    |                |
+| username     | varchar(150) | NO   | UNI | NULL    |                |
+| first_name   | varchar(30)  | NO   |     | NULL    |                |
+| last_name    | varchar(150) | NO   |     | NULL    |                |
+| email        | varchar(254) | NO   |     | NULL    |                |
+| is_staff     | tinyint(1)   | NO   |     | NULL    |                |
+| is_active    | tinyint(1)   | NO   |     | NULL    |                |
+| date_joined  | datetime(6)  | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> auth_user_groups </h2>
+<br>
+<pre>
++----------+---------+------+-----+---------+----------------+
+| Field    | Type    | Null | Key | Default | Extra          |
++----------+---------+------+-----+---------+----------------+
+| id       | int(11) | NO   | PRI | NULL    | auto_increment |
+| user_id  | int(11) | NO   | MUL | NULL    |                |
+| group_id | int(11) | NO   | MUL | NULL    |                |
++----------+---------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> auth_user_user_permissions </h2>
+<br>
+<pre>
++---------------+---------+------+-----+---------+----------------+
+| Field         | Type    | Null | Key | Default | Extra          |
++---------------+---------+------+-----+---------+----------------+
+| id            | int(11) | NO   | PRI | NULL    | auto_increment |
+| user_id       | int(11) | NO   | MUL | NULL    |                |
+| permission_id | int(11) | NO   | MUL | NULL    |                |
++---------------+---------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> django_admin_log </h2>
+<br>
+<pre>
++-----------------+----------------------+------+-----+---------+----------------+
+| Field           | Type                 | Null | Key | Default | Extra          |
++-----------------+----------------------+------+-----+---------+----------------+
+| id              | int(11)              | NO   | PRI | NULL    | auto_increment |
+| action_time     | datetime(6)          | NO   |     | NULL    |                |
+| object_id       | longtext             | YES  |     | NULL    |                |
+| object_repr     | varchar(200)         | NO   |     | NULL    |                |
+| action_flag     | smallint(5) unsigned | NO   |     | NULL    |                |
+| change_message  | longtext             | NO   |     | NULL    |                |
+| content_type_id | int(11)              | YES  | MUL | NULL    |                |
+| user_id         | int(11)              | NO   | MUL | NULL    |                |
++-----------------+----------------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> django_content_type </h2>
+<br>
+<pre>
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| app_label | varchar(100) | NO   | MUL | NULL    |                |
+| model     | varchar(100) | NO   |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> django_migrations </h2>
+<br>
+<pre>
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int(11)      | NO   | PRI | NULL    | auto_increment |
+| app     | varchar(255) | NO   |     | NULL    |                |
+| name    | varchar(255) | NO   |     | NULL    |                |
+| applied | datetime(6)  | NO   |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> django_session </h2>
+<br>
+<pre>
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| session_key  | varchar(40) | NO   | PRI | NULL    |       |
+| session_data | longtext    | NO   |     | NULL    |       |
+| expire_date  | datetime(6) | NO   | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+</pre>
+<br>
+
+<h2> polls_choice </h2>
+<br>
+<pre>
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+| choice_text | varchar(200) | NO   |     | NULL    |                |
+| votes       | int(11)      | NO   |     | NULL    |                |
+| question_id | int(11)      | NO   | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<h2> polls_question </h2>
+<br>
+<pre>
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| id            | int(11)      | NO   | PRI | NULL    | auto_increment |
+| question_text | varchar(200) | NO   |     | NULL    |                |
+| pub_date      | datetime(6)  | NO   |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+</pre>
+<br>
+
+<p> These are the tables in the MySQL database that were generated using Django. These tables store
+permissions data on the users and groups, migration and session history and the last two tables 
+polls_choices and polls_questions have info on the apps choices data and questions data. </p><br>
+
+
+<p> Download the <a href="http://172.19.50.157/pj04/static/schema.sql">schema</a> here! </p><br>
+
+</body>

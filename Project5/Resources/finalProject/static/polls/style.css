@@ -1,0 +1,134 @@
+
+
+/* for desktops */
+@media only screen and (min-width: 768px) {
+  main { 
+    padding: 10 20px;
+  }
+  
+  body {
+    width: 100%;
+  }
+
+  header, footer {
+    padding: 0.5em 0;
+  }
+  
+  .container { 
+    width: 100%;
+    
+  }
+  
+  .picture-gallery {
+    width: 85%;
+  }
+  
+  form {
+    width: 100%;
+  }
+  
+  article {
+    width: 75%;
+  }
+
+}
+
+/** Color Scheme for all Screens */
+
+* { /* resets css margins*/
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #878f99;
+}
+
+.container { /*using flexbox b/c it makes responsive layout easier */
+  display: flex;
+  flex: 1;
+  box-sizing: border-box;
+  padding: 17px;
+  float: left;
+  color: #deeaee;
+  background-color: #878f99;
+}
+
+img {
+  box-sizing: border-box;
+  padding: 10px;
+  color: #deeaee;
+  background-color: #878f99;
+}
+
+.picture-gallery {
+  display: grid;
+  grid: 1;
+  box-sizing: border-box;
+  float: left;
+  color: #deeaee;
+  background-color: #878f99;
+  padding: 10px;
+  font-size: 15px;
+}
+
+table, th, td {
+  box-sizing: border-box;
+  display: grid;
+  grid: 1;
+  border-collapse: collapse;
+  color: #deeaee;
+  background-color: #878f99;
+  padding: 5px;
+  font-size: 25px;
+  border: 1px solid #deeaee;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #deeaee;
+  background-color: #878f99;
+  font-size: 25px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 5px;
+  padding: 10px;
+  color: #deeaee;
+  background-color: #878f99;
+}
+
+main {
+  box-sizing: border-box;
+  flex: 1;
+  color: #deeaee;
+  background-color: #878f99;
+}
+
+header {
+  font-size: 40px;
+  text-align: center;
+  background-color: #878f99;
+  color: #deeaee;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+  text-indent: 15px;
+}
+ 
+h1 {
+  font-size: 30px;
+}  
+
+h2 {
+  font-size: 27px;
+}

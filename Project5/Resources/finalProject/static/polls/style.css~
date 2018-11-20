@@ -1,0 +1,15 @@
+li a {
+    color: green;
+}
+
+body {
+    background: white url("images/background.jpg") no-repeat;
+}
+
+.menu {
+ width: 100%;
+ position: fixed;
+ overflow: auto;
+ list-style-type: none;
+
+}
