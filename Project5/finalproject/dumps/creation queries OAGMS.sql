@@ -1,0 +1,10 @@
+use oagms;
+Create table artist (a_id varchar(50) NOT NULL, a_name varchar(50) NOT NULL,a_email varchar(50) NOT NULL, a_password varchar(256) NOT NULL, Gender varchar(50), Ph_number int, PRIMARY KEY (a_id));
+Create table artwork (art_id varchar(50) NOT NULL, price double NOT NULL, art_title varchar(50) NOT NULL, image LONGBLOB NOT NULL ,available boolean,PRIMARY KEY (art_id));
+Create table artist_sells (art_id varchar(50) NOT NULL, price double NOT NULL, a_id varchar(50) NOT NULL, Date date ,foreign key (art_id) REFERENCES artwork(art_id) ,foreign key (a_id) REFERENCES artist(a_id));
+Create table admin (login_id varchar(50) NOT NULL, password varchar(256) NOT NULL);
+Create table Customer (c_id varchar(50) NOT NULL, c_name varchar(50) NOT NULL, c_email varchar(50) NOT NULL, C_password varchar(256), Gender varchar (50), ph_number INT , PRIMARY KEY (c_id));
+Create table Customer_Buys (c_id varchar(50) NOT NULL, art_id varchar(50) NOT NULL, Date_of_purchase date, foreign key (art_id) REFERENCES artwork(art_id) ,foreign key (c_id) REFERENCES customer(c_id));
+Create table Order_Detail (order_id varchar(50) NOT NULL, art_id varchar(50) NOT NULL, a_id varchar(50) NOT NULL, stock_id varchar(50), subtotal double , primary key(order_id));
+Create table Shipping_Info (shipping_id varchar(50) NOT NULL, shipping_type varchar(50) NOT NULL, date_shipped varchar(50) NOT NULL, shipping_cost varchar(50) not null, shipping_address varchar(50) not null , primary key(shipping_id));
+Create table Orders (order_id varchar(50) NOT NULL, Date_created date Not null, date_shipped date  not null, c_id varchar(50) not null , art_id varchar(50) NOT NULL , shipping_id varchar(50) not null, foreign key (order_id) REFERENCES order_detail(order_id) , foreign key (art_id) REFERENCES artwork(art_id), foreign key (shipping_id) REFERENCES shipping_info(shipping_id));
