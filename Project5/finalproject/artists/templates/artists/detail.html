@@ -1,12 +1,12 @@
-<h1>{{ question.question_text }}</h1>
+<h1>{{ artwork.art_title }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'artists:vote' question.id %}" method="post">
+<form action="{% url 'artists:editArtwork' artwork.art_id %}" method="post">
 {% csrf_token %}
-{% for choice in question.choice_set.all %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+{% for art in artwork.art_set.all %}
+    <input type="radio" name="art" id="art{{ forloop.counter }}" value="{{ art.art_id }}">
+    <label for="art{{ forloop.counter }}">{{ art.art_title }}</label><br>
 {% endfor %}
-<input type="submit" value="Vote">
+<input type="submit" value="editArtwork">
 </form>

@@ -1,9 +1,11 @@
-<h1>{{ question.question_text }}</h1>
+<h1>{{ artwork.art_title }}</h1>
 
 <ul>
-{% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+{% for art in artwork.art_set.all %}
+<!--- does not apply
+    <li>{{ art.art_text }} -- {{ art.votes }} vote{{ art.votes|pluralize }}</li>\
+--->
 {% endfor %}
 </ul>
 
-<a href="{% url 'artists:detail' question.id %}">Vote again?</a>
+<a href="{% url 'artists:detail' artwork.art_id %}">Edit artwork again?</a>

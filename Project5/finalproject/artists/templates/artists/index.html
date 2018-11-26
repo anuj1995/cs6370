@@ -1,12 +1,12 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'artists/style.css' %}">
 
-{% if latest_question_list %}
+{% if latest_artwork_list %}
     <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'artists:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% for artwork in latest_artwork_list %}
+        <li><a href="{% url 'artists:detail' artwork.art_id %}">{{ artwork.art_title }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No polls are available.</p>
+    <p>No artwork is available.</p>
 {% endif %}
