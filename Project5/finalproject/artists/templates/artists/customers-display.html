@@ -1,0 +1,10 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'artists/style.css' %}">
+<h1>{{ customer.c_name }}</h1>
+<h2> Artwork: </h2>
+{% for art in artwork.art_set.all %}
+<h3> {{art.art_title}} </h3>
+<h3> {{art.price}} </h3>
+<h3> {{art.image}} </h3>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
