@@ -9,7 +9,7 @@ from django.db import models
 
 class Artwork(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
-    artist_id = models.ForeignKey('Artist', on_delete=models.CASCADE)
+    artist_id = models.ForeignKey('Artist', on_delete=models.CASCADE, db_column='artist_id')
     price = models.DecimalField(max_digits=5, decimal_places=2)
     art_title = models.CharField(max_length=50)
     image = models.TextField()
@@ -21,7 +21,7 @@ class Artwork(models.Model):
 
 class Artist(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
-    art_id = models.ForeignKey(Artwork, on_delete=models.CASCADE)
+    art_id = models.ForeignKey('Artwork', on_delete=models.CASCADE, db_column='art_id')
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)
@@ -39,7 +39,7 @@ class Customer(models.Model):
     username = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     password = models.CharField(max_length=256)  # Field name made lowercase.
-    order_id = models.ForeignKey('Orders', on_delete=models.CASCADE)
+    order_id = models.ForeignKey('Orders', on_delete=models.CASCADE, db_column='order_id')
 
     class Meta:
         db_table = 'customer'
@@ -47,9 +47,9 @@ class Customer(models.Model):
 
 class Orders(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
-    art_id = models.ForeignKey(Artwork, on_delete=models.CASCADE)
-    artist_id = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    art_id = models.ForeignKey(Artwork, on_delete=models.CASCADE, db_column='art_id')
+    artist_id = models.ForeignKey(Artist, on_delete=models.CASCADE, db_column='artist_id')
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customer_id')
 
     class Meta:
         db_table = 'orders'
