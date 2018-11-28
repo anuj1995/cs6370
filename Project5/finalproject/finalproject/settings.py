@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'finalproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'oagms',
+        'NAME': 'artist_db',
         'USER': 'root',
         'PASSWORD': 'Sttheresa18',
         'HOST': 'localhost',

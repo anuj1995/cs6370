@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Artist, ArtistSells, Artwork, Customer
-from .models import CustomerBuys, OrderDetail, Orders, ShippingInfo
+from .models import Artist, Artwork, Customer, Orders
+
 # Register your models here.
 """
 class ChoiceInline(admin.TabularInline):

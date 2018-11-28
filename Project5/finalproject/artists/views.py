@@ -2,8 +2,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import Choice, Question
-from .models import Artist, ArtistSells, Artwork, Customer
-from .models import CustomerBuys, OrderDetail, Orders, ShippingInfo
+from .models import Artist, Artwork, Customer, Orders
 from django.template import loader
 from django.urls import reverse
 from django.views import generic
@@ -27,19 +26,6 @@ def editartwork(request, art_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('artists:results', args=(artwork.art_id,)))
-
-class ArtworkListView(ListView):
-    model = ArtistSells
-    context_object_name = 'specific_artwork_list'
-
-    def head(self, *args, **kwargs):
-        """
-        Returns the artwork for a specific artist.
-        """
-        return ArtistSells.objects.filter()
-        # JT figure out how to be able to use multiple
-        # tables here and how to use sessions
-
 
 class IndexView(generic.ListView):
     template_name = 'artists/index.html'
