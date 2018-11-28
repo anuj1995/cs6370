@@ -1,0 +1,16 @@
+{% load static %}
+
+
+{% if latest_artwork_list %}
+{% if artwork.available %}
+{% for art in latest_artwork_list %}
+  {% block content %}
+  <h1> artwork.art_title </h1>
+  <h2> artwork.price </h2>
+  artwork.image
+  <button>Buy</button>
+  {% endblock %}
+{% endfor %}
+{% else %}
+    <p>No artwork is available.</p>
+{% endif %}

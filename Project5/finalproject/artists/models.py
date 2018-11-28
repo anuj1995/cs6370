@@ -16,7 +16,6 @@ class Artwork(models.Model):
     isAvailable = models.BooleanField(blank=True)
 
     class Meta:
-        managed = False
         db_table = 'artwork'
 
 
@@ -30,7 +29,6 @@ class Artist(models.Model):
     password = models.CharField(max_length=256)
 
     class Meta:
-        managed = False
         db_table = 'artist'
 
 
@@ -44,7 +42,6 @@ class Customer(models.Model):
     order_id = models.ForeignKey('Orders', on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
         db_table = 'customer'
 
 
@@ -55,5 +52,4 @@ class Orders(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
         db_table = 'orders'

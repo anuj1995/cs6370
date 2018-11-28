@@ -1,0 +1,33 @@
+
+
+
+{% load static %}
+
+{% block content %}
+<div class="add">
+            <form method="post" enctype="multipart/form-data">
+                <h2>Upload Art:</h2>
+                <div class="form-section">
+                    <label for="title">Title</label>
+                    <div class="control-label">
+                        <input type="text" id="title" placeholder="Title" class="form-control" autofocus>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <label for="price">Price</label>
+                    <div class="control-label">
+                        <input type="text" id="price" placeholder="Price" class="form-control" autofocus>
+                    </div>
+                </div>
+
+                <input type="file" name="myfile">
+
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+{% if uploaded_file_url %}
+    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+  {% endif %}
+
+  <p><a href="{% url 'home' %}">Return to home</a></p>
+{% endblock %}

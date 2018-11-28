@@ -7,9 +7,12 @@ from django.template import loader
 from django.urls import reverse
 from django.views import generic
 from django.views.generic import ListView
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 
 # Create your views here.
-def editartwork(request, art_id):
+def add(request):
     artwork = get_object_or_404(Artwork, pk=art_id)
     try:
         selected_art = artwork.choice_set.get(pk=request.POST['art'])
@@ -26,6 +29,22 @@ def editartwork(request, art_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('artists:results', args=(artwork.art_id,)))
+
+#def buy(request):
+
+
+
+def uploadPicture(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        file = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(file)
+        return render(request, 'templates/add.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'templates/add.html')
+
 
 class IndexView(generic.ListView):
     template_name = 'artists/index.html'
@@ -47,6 +66,7 @@ class DetailView(generic.DetailView):
         Return all artwork in the database.
         """
         return Artwork.objects.all()
+
 
 class ResultsView(generic.DetailView):
     model = Artwork
