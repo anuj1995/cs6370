@@ -8,12 +8,15 @@
 from django.db import models
 
 class Artwork(models.Model):
-    id = models.CharField(primary_key=True, max_length=50)
+    id = models.AutoField(primary_key=True)
     artist_id = models.ForeignKey('Artist', on_delete=models.CASCADE, db_column='artist_id')
     price = models.DecimalField(max_digits=5, decimal_places=2)
     art_title = models.CharField(max_length=50)
-    image = models.TextField()
+    image = models.FileField()
     isAvailable = models.BooleanField(blank=True)
+
+    def __str__(self):
+        return "{} - {} {} - {}".format(self.art_title, self.artist_id.first_name, self.artist_id.last_name,self.price)
 
     class Meta:
         db_table = 'artwork'
@@ -21,7 +24,7 @@ class Artwork(models.Model):
 
 class Artist(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
-    art_id = models.ForeignKey('Artwork', on_delete=models.CASCADE, db_column='art_id')
+    #art_id = models.ForeignKey('Artwork', on_delete=models.CASCADE, db_column='art_id')
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)

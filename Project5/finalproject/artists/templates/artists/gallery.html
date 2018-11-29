@@ -1,16 +1,10 @@
-{% load static %}
 
 
-{% if latest_artwork_list %}
-{% if artwork.available %}
-{% for art in latest_artwork_list %}
-  {% block content %}
-  <h1> artwork.art_title </h1>
-  <h2> artwork.price </h2>
-  artwork.image
-  <button>Buy</button>
-  {% endblock %}
-{% endfor %}
-{% else %}
-    <p>No artwork is available.</p>
-{% endif %}
+<ul>
+        {% for Artwork in all_artwork %}
+                <img src="{{ Artwork.image.url }}" height="250" width="250"> <br>
+                {{ Artwork.art_title }} <br>
+                {{ Artwork.artist_id.first_name }} {{ Artwork.artist_id.last_name }} <br>
+                ${{ Artwork.price }} <br> <br> <br> <br>
+        {% endfor %}
+</ul
