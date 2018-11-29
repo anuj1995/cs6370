@@ -3,6 +3,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Artist, Artwork, Customer, Orders
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 
 
 # Create your views here.
@@ -39,14 +42,24 @@ def add_artwork(request):
     if request.method == 'POST':
         if request.POST.get('art_title') and request.POST.get('price'):
             artist = Artist.objects.get(pk=1)
-
             art = Artwork()
+            #Get file to be converted
+            #myfile = request.FILES['myfile']
+            #fs = FileSystemStorage()
+            #filename = fs.save(myfile.name, myfile)
+
+            #art.image = filename
+
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+
+            art.image = filename
             art.art_title = request.POST['art_title']
             art.artist_id = artist
             art.price = request.POST['price']
             art.isAvailable = True
             art.save()
-            #messages.success(request, 'Your artwork has been submitted, thank you!')
             return render(request, 'artists/add_artwork.html')
     else:
             return render(request, 'artists/add_artwork.html')
