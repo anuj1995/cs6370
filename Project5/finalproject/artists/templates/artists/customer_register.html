@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-        <head>
-                <meta charset="utf-8">
-                <title>Customer Registration</title>
-        </head>
+<title>Athens Art Gallery</title>
+{% load static %}
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %}">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Lightbox -->
+  <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
 
-        <body>
+
+<body style = "background: url('/static/img/artGallery.jpg')";>
           <!-- NAVIGATION BAR-->
         <ul>
         <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
@@ -14,6 +24,11 @@
         <li class="horizontal_nav"><a href="{% url 'artists:about' %}">About</a></li>
         <li class="horizontal_nav"><a href="{% url 'artists:artist_display' %}">Artist Dashboard</a></li>
         </ul>
+        <br>
+        <br>
+        <br>
+        <div style="background-color: #FFF;width: 800; text-align:center;display: inline_block;padding: 30px">
+              <div>
 
                 <h1>Customer Sign-up</h1>
                 <form action="{% url 'artists:customer_register' %}" method="POST">
@@ -32,6 +47,7 @@
                         <button type="submit">Register</button>
                 </form>
 
-
+        </div>
+      </div>
         </body>
 </html>

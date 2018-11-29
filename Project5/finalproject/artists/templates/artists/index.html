@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
 </head>
 
-<body>
+<body style = "background: url('/static/img/artGallery.jpg')";>
           <!-- NAVIGATION BAR-->
         <ul>
         <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
@@ -30,12 +30,14 @@
         Welcome back {{ user.username }}, you have successfully been logged in. <br><br>
         {% endif %}
 
-        <a href="{% url 'artists:customer_login' %}">Customer Login</a><br>
+        <div class="loginbox">
+        <h2><a href="{% url 'artists:customer_login' %}">Customer Login</a><br></h2>
         <a href="{% url 'artists:customer_register' %}">Don't have a customer account?</a><br><br><br><br>
-
-
-        <a href="{% url 'artists:artist_login' %}">Artist Login</a><br>
+      </div>
+      <div class="loginbox1">
+        <h2><a href="{% url 'artists:artist_login' %}">Artist Login</a><br></h2>
         <a href="{% url 'artists:artist_register' %}">Don't have an artist account?</a>
+      </div>
 
 
 

@@ -12,6 +12,8 @@
   <!-- Lightbox -->
   <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
 <!-- NAVIGATION BAR-->
+<body style = "background: url('/static/img/artGallery.jpg')";>
+
 <ul>
 <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
 <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
@@ -21,7 +23,8 @@
 </ul>
 <br>
 <br>
-<div style="text-align:center">
+<div style="background-color: #FFF;width: 800; text-align:center;display: inline_block; margin: 0 auto;">
+<div>
 <ul>
         {% for Artwork in all_artwork %}
                 <img src="{{ Artwork.image.url }}" height="250" width="250"> <br>
@@ -31,3 +34,5 @@
         {% endfor %}
 </ul>
 </div>
+</div>
+</body>

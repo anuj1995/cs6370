@@ -1,7 +1,7 @@
 body{
   margin: 0;
   padding: 0;
-  background: url(artGallery.jpg);
+  background: url('/static/img/artGallery.jpg');
   background-size: cover;
   background-position: center;
   font-family: sans-serif;
@@ -9,7 +9,7 @@ body{
 
 .loginbox{
   width: 320px;
-  height: 420px;
+  height: 220px;
   background: #000;
   color: #fff;
   top: 50%;
@@ -98,7 +98,7 @@ body{
 
 .loginbox1{
   width: 320px;
-  height: 420px;
+  height: 220px;
   background: #000;
   color: #fff;
   top: 50%;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-        <head>
+
           <title>Athens Art Gallery</title>
           {% load static %}
           <meta charset="UTF-8">
@@ -14,22 +14,22 @@
             <link rel="stylesheet" href="{% static 'css/style.css' %}">
             <!-- Lightbox -->
             <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
-        </head>
 
-        <body>
+
+        <body style = "background: url('/static/img/artGallery.jpg')";>
           <!-- NAVIGATION BAR-->
-         <ul>
-                <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
-                <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
-                <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
-                <li class="horizontal_nav"><a href="{% url 'artists:about' %}">About</a></li>
-                <li class="horizontal_nav"><a href="{% url 'artists:artist_display' %}">Artist Dashboard</a></li>
-        </ul>
+          <ul>
+            <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
+            <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
+            <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
+            <li class="horizontal_nav"><a href="#about">About</a></li>
+          </ul>
           <br>
           <br>
           <br>
-                <h1>Add Artwork</h1>
-                <div style="text-align:center">
+          <div style="background-color: #FFF;width: 800; text-align:center;display: inline_block;padding: 30px">
+                <div>
+                  <h1>Add Artwork</h1>
                 <form action="{% url 'artists:add_artwork' %}" method = "POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 Art Title:<br><input type="text" name="art_title"/><br><br>
@@ -41,6 +41,7 @@
                 <input type="submit" value="Add Artwork"/>
                 </form>
               </div>
+            </div>
 
 
         </body>
