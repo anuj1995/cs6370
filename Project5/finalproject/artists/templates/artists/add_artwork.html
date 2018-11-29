@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+        <head>
+                <meta charset="utf-8">
+                <title>Add Artwork</title>
+        </head>
+
+        <body>
+                <h1>Add Artwork</h1>
+
+                <form action="{% url 'artists:gallery' %}" method = "POST">
+                {% csrf_token %}
+                Art Title:<br><input type="text" name="art_title"/><br><br>
+                Price:<br><input type="number" name="price" min="1" max="1000000"/><br>
+                <br>
+                <input type="submit" value="Add Artwork"/>
+                </form>
+
+
+        </body>
+</html>
