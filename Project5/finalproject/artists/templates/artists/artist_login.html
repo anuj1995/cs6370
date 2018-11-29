@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+        <head>
+                <meta charset="utf-8">
+                <title></title>
+        </head>
+        <body>
+                <ul>
+                  <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
+                  <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
+                  <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
+                  <li class="horizontal_nav"><a href="#about">About</a></li>
+                </ul>
+
+                <h1>Artist Login</h1>
+
+                <form action="{% url 'artists:artist_login' %}" method="POST">
+                          {% csrf_token %}
+                          <p>Username</p>
+                          <input type="text" name="artist_username" placeholder="Enter username">
+                          <p>Password</p>
+                          <input type="password" name="artist_password" placeholder="Enter Password">
+                          <input type="submit" name="" value="Login">
+                          <a href="{% url 'artists:artist_register' %}">Don't have an account?</a>
+                </form>
+
+
+        </body>
+</html>
