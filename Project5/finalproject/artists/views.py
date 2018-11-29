@@ -110,3 +110,10 @@ def artist_login(request):
             return render(request, 'artists/artist_login.html')
     else:
         return render(request, 'artists/artist_login.html') 
+    
+def artist_display(request):
+    all_artwork = Artwork.objects.all()
+    context = {
+        'all_artwork' : all_artwork
+    }
+    return render(request, 'artists/artist_display.html', context)
