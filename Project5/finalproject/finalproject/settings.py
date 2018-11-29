@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'artist_db',
         'USER': 'root',
-        'PASSWORD': 'DBclassisawesome1',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }

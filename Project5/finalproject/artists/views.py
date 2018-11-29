@@ -41,11 +41,12 @@ def add_artwork(request):
             artist = Artist.objects.get(pk=1)
 
             art = Artwork()
-            art.art_title = request.POST.get('art_title')
+            art.art_title = request.POST['art_title']
             art.artist_id = artist
-            art.price = request.POST.get('price')
+            art.price = request.POST['price']
             art.isAvailable = True
             art.save()
+            #messages.success(request, 'Your artwork has been submitted, thank you!')
             return render(request, 'artists/add_artwork.html')
     else:
             return render(request, 'artists/add_artwork.html')

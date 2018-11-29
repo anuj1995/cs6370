@@ -1,4 +1,10 @@
-
+<!-- NAVIGATION BAR-->
+<ul>
+  <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
+  <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
+  <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
+  <li class="horizontal_nav"><a href="#about">About</a></li>
+</ul>
 
 <ul>
         {% for Artwork in all_artwork %}

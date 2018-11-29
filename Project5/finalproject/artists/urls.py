@@ -9,6 +9,8 @@ urlpatterns = [
     path('gallery/', views.gallery, name='gallery'),
     path('add_artwork/', views.add_artwork, name='add_artwork'),
 
+
+
     #path('customer-register/', views.customer_register, name='customer_register'),
     #path('artist-register/', views.artist_register, name='artist_register'),
     #path('<int:pk>/', views.DetailView.as_view(), name='detail'),
