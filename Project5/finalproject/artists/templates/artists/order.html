@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+        <head>
+                <meta charset="utf-8">
+                <title></title>
+        </head>
+        <body>
+                <ul>
+                <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
+                <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
+                <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
+                <li class="horizontal_nav"><a href="{% url 'artists:about' %}">About</a></li>
+                <li class="horizontal_nav"><a href="{% url 'artists:artist_display' %}">Artist Dashboard</a></li>
+
+                </ul>
+
+                <br>
+                <br>
+
+                <img src="{{ artwork.image.url }}" height="250" width="250"> <br>
+                SOLD <br>
+                {{ artwork.art_title}} <br>
+
+                <br><br><br>
+                Please come pick up your new piece in store.
+
+
+
+        </body>
+</html>
