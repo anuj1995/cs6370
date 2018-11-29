@@ -1,0 +1,20 @@
+<!-- NAVIGATION BAR-->
+<ul>
+<li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
+<li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
+<li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
+<li class="horizontal_nav"><a href="{% url 'artists:about' %}">About</a></li>
+</ul>
+
+<ul>
+        {{ user.username}} <br>
+        {% for Artwork in all_artwork %}
+                {% if user.is_authenticated and user.first_name == Artwork.artist_id.first_name and user.last_name == Artwork.artist_id.last_name %}
+
+                        <img src="{{ Artwork.image.url }}" height="250" width="250"> <br>
+                        {{ Artwork.art_title }} <br>
+                        ${{ Artwork.price }} <br> <br> <br> <br>
+
+                {% endif %}
+        {% endfor %}
+</ul>
