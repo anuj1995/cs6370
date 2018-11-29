@@ -61,26 +61,28 @@ def gallery(request):
 def add_artwork(request):
     if request.method == 'POST':
         if request.POST.get('art_title') and request.POST.get('price'):
-            artist = Artist.objects.get(pk=1)
-            art = Artwork()
-            #Get file to be converted
-            #myfile = request.FILES['myfile']
-            #fs = FileSystemStorage()
-            #filename = fs.save(myfile.name, myfile)
+            if User.is_authenticated:
+                artist = Artist.objects.get(username = request.user.username)
 
-            #art.image = filename
+                art = Artwork()
+                #Get file to be converted
+                #myfile = request.FILES['myfile']
+                #fs = FileSystemStorage()
+                #filename = fs.save(myfile.name, myfile)
 
-            myfile = request.FILES['myfile']
-            fs = FileSystemStorage()
-            filename = fs.save(myfile.name, myfile)
+                #art.image = filename
 
-            art.image = filename
-            art.art_title = request.POST['art_title']
-            art.artist_id = artist
-            art.price = request.POST['price']
-            art.isAvailable = True
-            art.save()
-            return render(request, 'artists/add_artwork.html')
+                myfile = request.FILES['myfile']
+                fs = FileSystemStorage()
+                filename = fs.save(myfile.name, myfile)
+
+                art.image = filename
+                art.art_title = request.POST['art_title']
+                art.artist_id = artist
+                art.price = request.POST['price']
+                art.isAvailable = True
+                art.save()
+                return render(request, 'artists/add_artwork.html')
     else:
             return render(request, 'artists/add_artwork.html')
 
@@ -110,6 +112,20 @@ def artist_login(request):
             return render(request, 'artists/artist_login.html')
     else:
         return render(request, 'artists/artist_login.html') 
+    
+def order(request):
+    if request.method == 'POST':
+        art_id = request.POST['art_id']
+
+        artwork = Artwork.objects.get(id = art_id)
+        artwork.isAvailable = False
+        artwork.save()
+
+    context = {
+        'artwork' : artwork
+    }
+    return render(request, 'artists/order.html', context)
+
     
 def artist_display(request):
     all_artwork = Artwork.objects.all()
