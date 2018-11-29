@@ -15,21 +15,22 @@
           </ul>
 
                 <h1>Sign-up</h1>
-                <form form method="post">
+                <form action="{% url 'artists:artist_register' %}" method="POST">
+                        {% csrf_token %}
                         First Name:<br>
-                        <input type="text" name="first-name"><br>
+                        <input type="text" name="first_name"><br>
                         Last Name:<br>
-                        <input type="text" name="last-name"><br>
+                        <input type="text" name="last_name"><br>
                         Password:<br>
                         <input type="text" name="password"><br>
                         Username:<br>
                         <input type="text" name="username"><br>
                         Email:<br>
                         <input type="text" name="email"><br>
-
+                        <button type="submit">Register</button>
 
                 </form>
-                <button type="submit">Register</button>
+
 
         </body>
 </html>
