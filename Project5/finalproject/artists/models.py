@@ -23,7 +23,7 @@ class Artwork(models.Model):
 
 
 class Artist(models.Model):
-    id = models.CharField(primary_key=True, max_length=50)
+    id = models.AutoField(primary_key=True)
     #art_id = models.ForeignKey('Artwork', on_delete=models.CASCADE, db_column='art_id')
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -36,7 +36,7 @@ class Artist(models.Model):
 
 
 class Customer(models.Model):
-    id = models.CharField(primary_key=True, max_length=50)
+    id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)
@@ -49,7 +49,7 @@ class Customer(models.Model):
 
 
 class Orders(models.Model):
-    id = models.CharField(primary_key=True, max_length=50)
+    id = models.AutoField(primary_key=True)
     art_id = models.ForeignKey(Artwork, on_delete=models.CASCADE, db_column='art_id')
     artist_id = models.ForeignKey(Artist, on_delete=models.CASCADE, db_column='artist_id')
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customer_id')

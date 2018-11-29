@@ -4,6 +4,7 @@
         {% for Artwork in all_artwork %}
                 <img src="{{ Artwork.image.url }}" height="250" width="250"> <br>
                 {{ Artwork.art_title }} <br>
+                {{ Artwork.id }} <br>
                 {{ Artwork.artist_id.first_name }} {{ Artwork.artist_id.last_name }} <br>
                 ${{ Artwork.price }} <br> <br> <br> <br>
         {% endfor %}
