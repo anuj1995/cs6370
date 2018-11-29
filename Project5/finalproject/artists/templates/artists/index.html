@@ -17,22 +17,26 @@
 </head>
 
 <body>
-        <!-- NAVIGATION BAR-->
+          <!-- NAVIGATION BAR-->
         <ul>
         <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
         <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
         <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
-        <li class="horizontal_nav"><a href="#about">About</a></li>
+        <li class="horizontal_nav"><a href="{% url 'artists:about' %}">About</a></li>
+        <li class="horizontal_nav"><a href="{% url 'artists:artist_display' %}">About</a></li>
         </ul>
 
-
+        {% if user.is_authenticated %}
+        Welcome back {{ user.username }}, you have successfully been logged in. <br><br>
+        {% endif %}
 
         <a href="{% url 'artists:customer_login' %}">Customer Login</a><br>
         <a href="{% url 'artists:customer_register' %}">Don't have a customer account?</a><br><br><br><br>
 
 
         <a href="{% url 'artists:artist_login' %}">Artist Login</a><br>
-        <a href="{% url 'artists:artist_register' %}">Don't have an account?</a>
+        <a href="{% url 'artists:artist_register' %}">Don't have an artist account?</a>
+
 
 
 
