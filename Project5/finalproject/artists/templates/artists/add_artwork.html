@@ -15,10 +15,13 @@
           </ul>
                 <h1>Add Artwork</h1>
 
-                <form action="{% url 'artists:add_artwork' %}" method = "POST">
+                <form action="{% url 'artists:add_artwork' %}" method = "POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 Art Title:<br><input type="text" name="art_title"/><br><br>
                 Price:<br><input type="number" name="price" min="1" max="1000000"/><br>
+                <br>
+                Image Upload:<br><input type="file" name="myfile"><br>
+
                 <br>
                 <input type="submit" value="Add Artwork"/>
                 </form>
@@ -26,3 +29,4 @@
 
         </body>
 </html>
+
