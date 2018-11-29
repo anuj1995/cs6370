@@ -1,5 +1,3 @@
-
-#from django.http import Http404
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Artist, Artwork, Customer, Orders
@@ -15,19 +13,41 @@ def index(request):
     }
     return render(request, 'artists/index.html', context)
 
+def about(request):
+    context = {
+
+    }
+    return render(request, 'artists/about.html', context)
+
 
 def artist_register(request):
-    context = {
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
 
-    }
-    return render(request, 'artists/artist_register.html', context)
+        user = User.objects.create_user(username=username, password=password,email=email, first_name=first_name, last_name=last_name)
+        user.save()
+        return render(request, 'artists/artist_register.html')
+    else:
+        return render(request, 'artists/artist_register.html')
 
-
+    
 def customer_register(request):
-    context = {
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
 
-    }
-    return render(request, 'artists/customer_register.html', context)
+        user = User.objects.create_user(username=username, password=password,email=email, first_name=first_name, last_name=last_name)
+        user.save()
+        return render(request, 'artists/customer_register.html')
+    else:
+        return render(request, 'artists/customer_register.html')
 
 
 def gallery(request):
@@ -63,3 +83,37 @@ def add_artwork(request):
             return render(request, 'artists/add_artwork.html')
     else:
             return render(request, 'artists/add_artwork.html')
+
+def customer_login(request):
+    if request.method == 'POST':
+        username = request.POST['customer_username']
+        password = request.POST['customer_password']
+
+        user = auth.authenticate(username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return render(request, 'artists/customer_login.html')
+    else:
+        return render(request, 'artists/customer_login.html')
+
+
+def artist_login(request):
+    if request.method == 'POST':
+        username = request.POST['artist_username']
+        password = request.POST['artist_password']
+
+        user = auth.authenticate(username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return render(request, 'artists/artist_login.html')
+    else:
+        return render(request, 'artists/artist_login.html') 
+    
+def artist_display(request):
+    all_artwork = Artwork.objects.all()
+    context = {
+        'all_artwork' : all_artwork
+    }
+    return render(request, 'artists/artist_display.html', context)

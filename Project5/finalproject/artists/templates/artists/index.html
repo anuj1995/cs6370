@@ -1,49 +1,50 @@
 
 <html>
 <head>
-<title>Login Form Design</title>
-  <!-- <link rel="stylesheet" type="text/css" href="artists.style.css">
--->
-
+<title>Athens Art Gallery</title>
+{% load static %}
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %}">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Lightbox -->
+  <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
+</head>
 
 <body>
-  <!-- NAVIGATION BAR-->
-  <ul>
-    <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
-    <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
-    <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
-    <li class="horizontal_nav"><a href="#about">About</a></li>
-  </ul>
+          <!-- NAVIGATION BAR-->
+        <ul>
+        <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
+        <li class="horizontal_nav"><a href="{% url 'artists:gallery' %}">Gallery</a></li>
+        <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
+        <li class="horizontal_nav"><a href="{% url 'artists:about' %}">About</a></li>
+        <li class="horizontal_nav"><a href="{% url 'artists:artist_display' %}">About</a></li>
+        </ul>
+
+        {% if user.is_authenticated %}
+        Welcome back {{ user.username }}, you have successfully been logged in. <br><br>
+        {% endif %}
+
+        <a href="{% url 'artists:customer_login' %}">Customer Login</a><br>
+        <a href="{% url 'artists:customer_register' %}">Don't have a customer account?</a><br><br><br><br>
 
 
-  <div class="loginbox">
-    <!-- <img src="avatar.jpg" class="avatar"> -->
-      <h1>Customer Login Here</h1>
-      <form>
-        <p>Username</p>
-        <input type="text" name="" placeholder="Enter username">
-        <p>Password</p>
-        <input type="password" name="" placeholder="Enter Password">
-        <input type="submit" name="" value="Login">
-        <a href="#">Lost your password?</a><br>
-        <a href="{% url 'artists:customer_register' %}">Don't have an account?</a>
-      </form>
-  </div>
-  <div class="loginbox1">
-    <!-- <img src="avatar.jpg" class="avatar"> -->
-      <h1>Artist Login Here</h1>
-      <form>
-        <p>Username</p>
-        <input type="text" name="" placeholder="Enter username">
-        <p>Password</p>
-        <input type="password" name="" placeholder="Enter Password">
-        <input type="submit" name="" value="Login">
-        <a href="#">Lost your password?</a><br>
-        <a href="{% url 'artists:artist_register' %}">Don't have an account?</a>
-      </form>
-  </div>
+        <a href="{% url 'artists:artist_login' %}">Artist Login</a><br>
+        <a href="{% url 'artists:artist_register' %}">Don't have an artist account?</a>
 
+
+
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %} "></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+    <script src="{% static 'js/lightbox.min.js' %} "></script>
+  <script src="{% static 'js/main.js' %} "></script>
 
 </body>
-</head>
+
 </html>

@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
         <head>
-                <meta charset="utf-8">
-                <title>Add Artwork</title>
+          <title>Athens Art Gallery</title>
+          {% load static %}
+          <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="{% static 'css/all.css' %}">
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+            <!-- Custom -->
+            <link rel="stylesheet" href="{% static 'css/style.css' %}">
+            <!-- Lightbox -->
+            <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
         </head>
 
         <body>
@@ -13,15 +24,22 @@
             <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
             <li class="horizontal_nav"><a href="#about">About</a></li>
           </ul>
+          <br>
+          <br>
+          <br>
                 <h1>Add Artwork</h1>
-
-                <form action="{% url 'artists:add_artwork' %}" method = "POST">
+                <div style="text-align:center">
+                <form action="{% url 'artists:add_artwork' %}" method = "POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 Art Title:<br><input type="text" name="art_title"/><br><br>
                 Price:<br><input type="number" name="price" min="1" max="1000000"/><br>
                 <br>
+                Image Upload:<br><input type="file" name="myfile"><br>
+
+                <br>
                 <input type="submit" value="Add Artwork"/>
                 </form>
+              </div>
 
 
         </body>

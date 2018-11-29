@@ -1,3 +1,16 @@
+<title>Athens Art Gallery</title>
+{% load static %}
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %}">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Lightbox -->
+  <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
 <!-- NAVIGATION BAR-->
 <ul>
   <li class="horizontal_nav"><a href="{% url 'artists:index' %}">Home</a></li>
@@ -5,13 +18,15 @@
   <li class="horizontal_nav"><a href="{% url 'artists:add_artwork' %}">Add Artwork</a></li>
   <li class="horizontal_nav"><a href="#about">About</a></li>
 </ul>
-
+<br>
+<br>
+<div style="text-align:center">
 <ul>
         {% for Artwork in all_artwork %}
                 <img src="{{ Artwork.image.url }}" height="250" width="250"> <br>
-                {{ Artwork.art_title }} <br>
-                {{ Artwork.id }} <br>
-                {{ Artwork.artist_id.first_name }} {{ Artwork.artist_id.last_name }} <br>
-                ${{ Artwork.price }} <br> <br> <br> <br>
+                <b>Artwork Title:</b> "{{ Artwork.art_title }}" <br>
+                <b>Artist:</b> {{ Artwork.artist_id.first_name }} {{ Artwork.artist_id.last_name }} <br>
+                <b>Price:</b> ${{ Artwork.price }} <br> <br> <br> <br>
         {% endfor %}
-</ul
+</ul>
+</div>
