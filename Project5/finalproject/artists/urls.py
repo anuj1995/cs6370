@@ -11,6 +11,6 @@ urlpatterns = [
     path('artist_login/', views.artist_login, name='artist_login'),
     path('gallery/', views.gallery, name='gallery'),
     path('add_artwork/', views.add_artwork, name='add_artwork'),
-
+    path('artist_display/', views.artist_display, name='artist_display'),
 
 ]
