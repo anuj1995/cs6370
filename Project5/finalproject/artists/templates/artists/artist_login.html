@@ -26,19 +26,18 @@
                 <br>
                 <br>
                 <h1>Artist Login</h1>
-                <div style="background-color: #FFF;width: 800; text-align:center;display: inline_block; margin: 0 auto;">
-                <div>
+
                 <form action="{% url 'artists:artist_login' %}" method="POST">
                           {% csrf_token %}
                           <p>Username</p>
                           <input type="text" name="artist_username" placeholder="Enter username">
                           <p>Password</p>
                           <input type="password" name="artist_password" placeholder="Enter Password">
+                          <br>
                           <input type="submit" name="" value="Login">
                           <a href="{% url 'artists:artist_register' %}">Don't have an account?</a>
                 </form>
-</div>
-</div>
+
 
         </body>
 </html>

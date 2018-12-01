@@ -26,10 +26,8 @@
         </ul>
         <br>
         <br>
-        <br>
-        <div style="background-color: #FFF;width: 800; text-align:center;display: inline_block;padding: 30px">
+        <div style="width: 800; text-align:center;display: inline_block;padding: 30px">
               <div>
-
                 <h1>Customer Sign-up</h1>
                 <form action="{% url 'artists:customer_register' %}" method="POST">
                         {% csrf_token %}
@@ -37,8 +35,10 @@
                         <input type="text" name="first_name"><br>
                         Last Name:<br>
                         <input type="text" name="last_name"><br>
+                        <div background-color="black">
                         Password:<br>
-                        <input type="text" name="password"><br>
+                        <input type="password" name="password"><br>
+                        <div>
                         Username:<br>
                         <input type="text" name="username"><br>
                         Email:<br>

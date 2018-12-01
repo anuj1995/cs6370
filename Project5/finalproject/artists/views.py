@@ -3,8 +3,9 @@ from django.shortcuts import render
 from .models import Artist, Artwork, Customer, Orders
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
-
+from django.core.files import File
+from django.contrib.auth.models import User
+from django.contrib import auth
 
 # Create your views here.
 def index(request):
@@ -30,11 +31,20 @@ def artist_register(request):
 
         user = User.objects.create_user(username=username, password=password,email=email, first_name=first_name, last_name=last_name)
         user.save()
+
+        artist = Artist()
+        artist.username = username
+        artist.first_name = first_name
+        artist.last_name = last_name
+        artist.email = email
+        artist.password = password
+        artist.save()
+
         return render(request, 'artists/artist_register.html')
     else:
         return render(request, 'artists/artist_register.html')
 
-    
+
 def customer_register(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
@@ -111,8 +121,15 @@ def artist_login(request):
             auth.login(request, user)
             return render(request, 'artists/artist_login.html')
     else:
-        return render(request, 'artists/artist_login.html') 
-    
+        return render(request, 'artists/artist_login.html')
+
+def artist_display(request):
+    all_artwork = Artwork.objects.all()
+    context = {
+        'all_artwork' : all_artwork
+    }
+    return render(request, 'artists/artist_display.html', context)
+
 def order(request):
     if request.method == 'POST':
         art_id = request.POST['art_id']
@@ -125,11 +142,3 @@ def order(request):
         'artwork' : artwork
     }
     return render(request, 'artists/order.html', context)
-
-    
-def artist_display(request):
-    all_artwork = Artwork.objects.all()
-    context = {
-        'all_artwork' : all_artwork
-    }
-    return render(request, 'artists/artist_display.html', context)

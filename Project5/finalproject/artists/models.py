@@ -10,7 +10,7 @@ from django.db import models
 class Artwork(models.Model):
     id = models.AutoField(primary_key=True)
     artist_id = models.ForeignKey('Artist', on_delete=models.CASCADE, db_column='artist_id')
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     art_title = models.CharField(max_length=50)
     image = models.FileField()
     isAvailable = models.BooleanField(blank=True)
